@@ -25,8 +25,8 @@ pipeline:
     environment:
       - DOCKER_HOST=tcp://172.17.0.1:2375
     commands:
-      - docker login -u="ukhomeofficedigital+drone" -p=$${DOCKER_PASSWORD} quay.io
-      - docker tag file-vault-$${DRONE_COMMIT_SHA} quay.io/ukhomeofficedigital/icasework-resolver:$${DRONE_COMMIT_SHA}
+      - docker login -u="ukhomeofficedigital+icasework_resolver" -p=$${DOCKER_PASSWORD} quay.io
+      - docker tag icasework-resolver-$${DRONE_COMMIT_SHA} quay.io/ukhomeofficedigital/icasework-resolver:$${DRONE_COMMIT_SHA}
       - docker push quay.io/ukhomeofficedigital/icasework-resolver:$${DRONE_COMMIT_SHA}
     when:
       branch: master
