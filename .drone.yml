@@ -1,6 +1,19 @@
+matrix:
+  NAME:
+    - ukhomeofficedigital/icasework-resolver
+  MAJOR:
+    - 1
+  MINOR:
+    - 0
+  PATCH:
+    - 0
+  DOCKER_USERNAME:
+    - ukhomeofficedigital+icasework_resolver
+  DOCKER_REPO:
+    - quay.io
 pipeline:
   build_app:
-    image: docker:18.03.1-ce
+    image: docker
     environment:
       - DOCKER_HOST=tcp://172.17.0.1:2375
     commands:
@@ -8,26 +21,18 @@ pipeline:
     when:
       event: pull_request
 
-  build_app:
-    image: docker:18.03.1-ce
-    environment:
-      - DOCKER_HOST=tcp://172.17.0.1:2375
-    commands:
-      - docker build -t icasework-resolver-${DRONE_COMMIT_SHA} .
+  docker-build-and-push:
+    image: ukhomeoffice/drone-docker
+    secrets: [ docker_password ]
+    username: '${DOCKER_USERNAME}'
+    repo: '${DOCKER_REPO}/${NAME}'
+    registry: '${DOCKER_REPO}'
+    tags:
+      - '${MAJOR}.${MINOR}.${PATCH}-${DRONE_BUILD_NUMBER}-${DRONE_COMMIT:0:10}'
+      - '${MAJOR}.${MINOR}.${PATCH}'
+      - '${MAJOR}.${MINOR}'
+      - '${MAJOR}'
+      - 'latest'
     when:
-      branch: master
       event: push
-
-  image_to_quay:
-    image: docker:18.03.1-ce
-    secrets:
-      - DOCKER_PASSWORD
-    environment:
-      - DOCKER_HOST=tcp://172.17.0.1:2375
-    commands:
-      - docker login -u="ukhomeofficedigital+icasework_resolver" -p=$${DOCKER_PASSWORD} quay.io
-      - docker tag icasework-resolver-$${DRONE_COMMIT_SHA} quay.io/ukhomeofficedigital/icasework-resolver:$${DRONE_COMMIT_SHA}
-      - docker push quay.io/ukhomeofficedigital/icasework-resolver:$${DRONE_COMMIT_SHA}
-    when:
       branch: master
-      event: push
