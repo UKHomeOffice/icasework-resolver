@@ -23,11 +23,11 @@ const collectDefaultMetrics = client.collectDefaultMetrics;
 collectDefaultMetrics({ timeout: 5000 });
 const icaseworkSuccess = new client.Counter({
   name: 'casework_submission_success',
-  help: 'metric_help'
+  help: 'Counts the number of successful casework submissions to iCasework'
 });
 const icaseworkFailed = new client.Counter({
   name: 'casework_submission_failed',
-  help: 'metric_help'
+  help: 'Counts the number of failed casework submissions to iCasework'
 });
 
 const server = http.createServer((req, res) => {
