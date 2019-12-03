@@ -4,7 +4,7 @@ matrix:
   MAJOR:
     - 1
   MINOR:
-    - 0
+    - 1
   PATCH:
     - 0
   DOCKER_USERNAME:
