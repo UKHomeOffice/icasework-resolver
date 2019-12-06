@@ -22,14 +22,14 @@ const client = require('prom-client');
 const collectDefaultMetrics = client.collectDefaultMetrics;
 collectDefaultMetrics({ timeout: 5000 });
 const icaseworkSuccess = new client.Counter({
-  name: 'casework_submission_success',
+  name: 'icasework_submission_success',
   help: 'Counts the number of successful casework submissions to iCasework',
-  labelNames: ['casework_submission_success']
+  labelNames: ['submission_success']
 });
 const icaseworkFailed = new client.Counter({
-  name: 'casework_submission_failed',
+  name: 'icasework_submission_failed',
   help: 'Counts the number of failed casework submissions to iCasework',
-  labelNames: ['casework_submission_failed']
+  labelNames: ['submission_failed']
 });
 
 const server = http.createServer((req, res) => {
