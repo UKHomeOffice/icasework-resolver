@@ -31,6 +31,7 @@ if (!process.env.AWS_ACCESS_KEY_ID) {
 }
 
 module.exports = {
+  audit: process.env.AUDIT_DATA || false,
   icasework: {
     url: process.env.ICASEWORK_URL,
     createpath: '/createcase',

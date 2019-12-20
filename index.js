@@ -4,13 +4,15 @@ const winston = require('winston');
 const { Consumer } = require('sqs-consumer');
 const Casework = require('./models/i-casework');
 const config = require('./config');
-const db = require("./db");
 const transports = [
   new winston.transports.Console({
     level: 'info',
     handleExceptions: true
   })
 ];
+if (config.audit) {
+  const db = require("./db");
+}
 
 const logger = winston.createLogger({
   transports,
@@ -25,7 +27,8 @@ const resolver = Consumer.create({
 
       casework.save()
           .then(data => {
-            return db('resolver').insert({
+            if (audit) {
+              return db('resolver').insert({
                 caseID: data.createcaseresponse.caseid
               }).then(() => {
                 logger.info({
@@ -36,6 +39,13 @@ const resolver = Consumer.create({
               }).catch(error => {
                 reject(error);
               });
+            } else {
+              logger.info({
+                message: 'Casework submission successful',
+                caseID: data.createcaseresponse.caseid
+              });
+              resolve();
+            }
           })
           .catch(e => {
             logger.log('error', `Casework submission failed: ${e.status}`);
