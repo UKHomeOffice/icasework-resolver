@@ -2,9 +2,9 @@ matrix:
   NAME:
     - ukhomeofficedigital/icasework-resolver
   MAJOR:
-    - 1
+    - 2
   MINOR:
-    - 1
+    - 0
   PATCH:
     - 0
   DOCKER_USERNAME:

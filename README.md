@@ -15,4 +15,8 @@ ICASEWORK_URL         | iCasework URL for the casework instance
 AWS_SQS               | AWS SQS URL
 AWS_SECRET_ACCESS_KEY | AWS Secret Access Key
 AWS_ACCESS_KEY_ID     | AWS Access Key ID
+DB_HOST               | The postgres db host for audit data
+DB_USER               | The postgres db username for audit data
+DB_PASS               | The postgres db password for audit data
+DB_NAME               | The postgres db name for audit data
 ```
