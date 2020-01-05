@@ -10,8 +10,10 @@ const transports = [
     handleExceptions: true
   })
 ];
+let db;
+
 if (config.audit) {
-  const db = require("./db");
+  db = require("./db");
 }
 
 const logger = winston.createLogger({
@@ -27,23 +29,20 @@ const resolver = Consumer.create({
 
       casework.save()
           .then(data => {
-            if (audit) {
+            logger.info({
+              message: 'Casework submission successful',
+              caseID: data.createcaseresponse.caseid
+            });
+            if (config.audit) {
               return db('resolver').insert({
-                caseID: data.createcaseresponse.caseid
+                caseID: data.createcaseresponse.caseid,
+                success: true
               }).then(() => {
-                logger.info({
-                  message: 'Casework submission successful',
-                  caseID: data.createcaseresponse.caseid
-                });
                 resolve();
               }).catch(error => {
                 reject(error);
               });
             } else {
-              logger.info({
-                message: 'Casework submission successful',
-                caseID: data.createcaseresponse.caseid
-              });
               resolve();
             }
           })
@@ -53,7 +52,18 @@ const resolver = Consumer.create({
               logger.log('error', e.headers['x-application-error-code']);
               logger.log('error', e.headers['x-application-error-info']);
             }
-            reject(e);
+
+            if (config.audit) {
+              return db('resolver').insert({
+                success: false
+              }).then(() => {
+                reject(e);
+              }).catch(error => {
+                reject(error);
+              });
+            } else {
+              reject(e);
+            }
           });
 
     });
