@@ -1,38 +1,44 @@
-matrix:
-  NAME:
-    - ukhomeofficedigital/icasework-resolver
-  MAJOR:
-    - 2
-  MINOR:
-    - 0
-  PATCH:
-    - 0
-  DOCKER_USERNAME:
-    - ukhomeofficedigital+icasework_resolver
-  DOCKER_REPO:
-    - quay.io
-pipeline:
-  build_app:
-    image: docker
-    environment:
-      - DOCKER_HOST=tcp://172.17.0.1:2375
-    commands:
-      - docker build -t icasework-resolver .
-    when:
-      event: pull_request
+---
+kind: pipeline
+name: matrix-1
+type: kubernetes
 
-  docker-build-and-push:
-    image: ukhomeoffice/drone-docker
-    secrets: [ docker_password ]
-    username: '${DOCKER_USERNAME}'
-    repo: '${DOCKER_REPO}/${NAME}'
-    registry: '${DOCKER_REPO}'
-    tags:
-      - '${MAJOR}.${MINOR}.${PATCH}-${DRONE_BUILD_NUMBER}-${DRONE_COMMIT:0:10}'
-      - '${MAJOR}.${MINOR}.${PATCH}'
-      - '${MAJOR}.${MINOR}'
-      - '${MAJOR}'
-      - 'latest'
+steps:
+- name: build_app
+  pull: if-not-exists
+  image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind
+  commands:
+  - n=0; while [ "$n" -lt 60 ] && [ ! docker stats --no-stream ]; do n=$(( n + 1 )); sleep 1; done
+  - docker build -t icasework-resolver .
+  when:
+    branch: [ master, features/* ]
+    event: push
+
+- name: docker-build-and-push
+  pull: if-not-exists
+  image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind
+  environment:
+    DOCKER_PASSWORD:
+      from_secret: DOCKER_PASSWORD
+    commands:
+      - n=0; while [ "$n" -lt 60 ] && [ ! docker stats --no-stream ]; do n=$(( n + 1 )); sleep 1; done
+      - docker login -u="ukhomeofficedigital+icasework_resolver" -p=$${DOCKER_PASSWORD} quay.io
+      - docker tag icasework-resolver quay.io/ukhomeofficedigital/modern-slavery-data-service:2.0.0-${DRONE_BUILD_NUMBER}-${DRONE_COMMIT:0:10}
+      - docker tag icasework-resolver quay.io/ukhomeofficedigital/modern-slavery-data-service:2.0.0
+      - docker tag icasework-resolver quay.io/ukhomeofficedigital/modern-slavery-data-service:2.0
+      - docker tag icasework-resolver quay.io/ukhomeofficedigital/modern-slavery-data-service:2
+      - docker tag icasework-resolver quay.io/ukhomeofficedigital/modern-slavery-data-service:latest
+      - docker push quay.io/ukhomeofficedigital/modern-slavery-data-service:2.0.0-${DRONE_BUILD_NUMBER}-${DRONE_COMMIT:0:10}
+      - docker push quay.io/ukhomeofficedigital/modern-slavery-data-service:2.0.0
+      - docker push quay.io/ukhomeofficedigital/modern-slavery-data-service:2.0
+      - docker push quay.io/ukhomeofficedigital/modern-slavery-data-service:2
+      - docker push quay.io/ukhomeofficedigital/modern-slavery-data-service:latest
     when:
-      event: push
       branch: master
+      event: push
+
+services:
+  - name: docker
+    image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind
+
+...
