@@ -18,19 +18,21 @@ steps:
   image: ukhomeoffice/drone-docker
   environment:
     DOCKER_PASSWORD:
-      from_secret: docker_password
-  settings:
-    registry: quay.io
-    repo: quay.io/ukhomeofficedigital/icasework-resolver
-    tags:
-    - 2.0.0-${DRONE_BUILD_NUMBER}-${DRONE_COMMIT:0:10}
-    - 2.0.0
-    - 2
-    - 2
-    - latest
-    username: ukhomeofficedigital+icasework_resolver
-  when:
-    branch: master
-    event: push
+      from_secret: DOCKER_PASSWORD
+    commands:
+      - docker login -u="ukhomeofficedigital+icasework_resolver" -p=$${DOCKER_PASSWORD} quay.io
+      - docker tag icasework-resolver quay.io/ukhomeofficedigital/modern-slavery-data-service:2.0.0-${DRONE_BUILD_NUMBER}-${DRONE_COMMIT:0:10}
+      - docker tag icasework-resolver quay.io/ukhomeofficedigital/modern-slavery-data-service:2.0.0
+      - docker tag icasework-resolver quay.io/ukhomeofficedigital/modern-slavery-data-service:2.0
+      - docker tag icasework-resolver quay.io/ukhomeofficedigital/modern-slavery-data-service:2
+      - docker tag icasework-resolver quay.io/ukhomeofficedigital/modern-slavery-data-service:latest
+      - docker push quay.io/ukhomeofficedigital/modern-slavery-data-service:2.0.0-${DRONE_BUILD_NUMBER}-${DRONE_COMMIT:0:10}
+      - docker push quay.io/ukhomeofficedigital/modern-slavery-data-service:2.0.0
+      - docker push quay.io/ukhomeofficedigital/modern-slavery-data-service:2.0
+      - docker push quay.io/ukhomeofficedigital/modern-slavery-data-service:2
+      - docker push quay.io/ukhomeofficedigital/modern-slavery-data-service:latest
+    when:
+      branch: master
+      event: push
 
 ...
