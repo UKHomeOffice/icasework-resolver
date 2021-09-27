@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return, no-console */
 'use strict';
 
 const winston = require('winston');
@@ -13,7 +14,7 @@ const transports = [
 let db;
 
 if (config.audit) {
-  db = require("./db");
+  db = require('./db');
 }
 
 const logger = winston.createLogger({
@@ -23,58 +24,55 @@ const logger = winston.createLogger({
 
 const resolver = Consumer.create({
   queueUrl: config.aws.sqs,
-  handleMessage: async (message) => {
-    return new Promise(function(resolve, reject) {
+  handleMessage: async message => {
+    return new Promise(function (resolve, reject) {
       const casework = new Casework(JSON.parse(message.Body));
 
       casework.save()
-          .then(data => {
-            logger.info({
-              message: 'Casework submission successful',
-              caseID: data.createcaseresponse.caseid
-            });
-            if (config.audit) {
-              return db('resolver').insert({
-                caseID: data.createcaseresponse.caseid,
-                success: true
-              }).then(() => {
-                resolve();
-              }).catch(error => {
-                reject(error);
-              });
-            } else {
-              resolve();
-            }
-          })
-          .catch(e => {
-            logger.log('error', `Casework submission failed: ${e.status}`);
-            if (e.headers) {
-              logger.log('error', e.headers['x-application-error-code']);
-              logger.log('error', e.headers['x-application-error-info']);
-            }
-
-            if (config.audit) {
-              return db('resolver').insert({
-                success: false
-              }).then(() => {
-                reject(e);
-              }).catch(error => {
-                reject(error);
-              });
-            } else {
-              reject(e);
-            }
+        .then(data => {
+          logger.info({
+            message: 'Casework submission successful',
+            caseID: data.createcaseresponse.caseid
           });
+          if (config.audit) {
+            return db('resolver').insert({
+              caseID: data.createcaseresponse.caseid,
+              success: true
+            }).then(() => {
+              resolve();
+            }).catch(error => {
+              reject(error);
+            });
+          }
+          resolve();
+        })
+        .catch(e => {
+          logger.log('error', `Casework submission failed: ${e.status}`);
+          if (e.headers) {
+            logger.log('error', e.headers['x-application-error-code']);
+            logger.log('error', e.headers['x-application-error-info']);
+          }
 
+          if (config.audit) {
+            return db('resolver').insert({
+              success: false
+            }).then(() => {
+              reject(e);
+            }).catch(error => {
+              reject(error);
+            });
+          }
+          reject(e);
+        });
     });
   }
 });
 
-resolver.on('error', (err) => {
+resolver.on('error', err => {
   console.error(err.message);
 });
 
-resolver.on('processing_error', (err) => {
+resolver.on('processing_error', err => {
   console.error(err.message);
 });
 
