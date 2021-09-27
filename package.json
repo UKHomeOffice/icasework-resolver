@@ -3,16 +3,26 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "engines": {
+    "node": "^14.15.0"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+    "test:lint": "eslint . --config ./node_modules/eslint-config-hof/default.js",
+    "test:snyk": "snyk config set api=SNYK_TOKEN && snyk test"
   },
   "author": "",
   "license": "MIT",
   "dependencies": {
     "hof-model": "^3.1.2",
-    "knex": "^0.20.4",
+    "knex": "^0.95.11",
     "pg": "^7.15.1",
     "sqs-consumer": "^5.4.0",
     "winston": "^3.2.1"
+  },
+  "devDependencies": {
+    "eslint": "^7.32.0",
+    "eslint-config-hof": "^1.2.1",
+    "snyk": "^1.722.0"
   }
 }
