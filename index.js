@@ -49,6 +49,10 @@ const resolver = Consumer.create({
     try {
     return new Promise(function (resolve, reject) {
       const getCasework = new getCasework(JSON.parse(message.body))
+      const response = await getCasework.fetch();
+      if (response.status === 200) {
+        throw new Error ("Report already exists")
+      }
       const casework = new Casework(JSON.parse(message.Body));
       const data = await casework.save();
       const caseID = data.createcaseresponse.caseid;

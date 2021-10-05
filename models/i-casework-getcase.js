@@ -20,7 +20,7 @@ module.exports = class DocumentModel extends Model {
     const params = {
       Key: config.icasework.key,
       Signature: this.sign(),
-      CaseId = data.ExternalId,
+      CaseId: data.ExternalId,
       Format: 'json',
       db: config.icasework.db,
       RequestMethod: 'Online form'
