@@ -35,7 +35,6 @@ module.exports = {
   icasework: {
     url: process.env.ICASEWORK_URL,
     createpath: '/createcase',
-    uploadpath: '/uploaddocuments',
     getcasepath: '/getcasedetails',
     key: process.env.ICASEWORK_KEY,
     secret: process.env.ICASEWORK_SECRET,

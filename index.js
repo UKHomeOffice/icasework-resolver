@@ -4,6 +4,7 @@
 const winston = require('winston');
 const { Consumer } = require('sqs-consumer');
 const Casework = require('./models/i-casework');
+const getCasework = require('./models/i-casework-getcase')
 const config = require('./config');
 const transports = [
   new winston.transports.Console({
@@ -46,6 +47,8 @@ const resolver = Consumer.create({
   queueUrl: config.aws.sqs,
   handleMessage: async message => {
     try {
+    return new Promise(function (resolve, reject) {
+      const getCasework = new getCasework(JSON.parse(message.body))
       const casework = new Casework(JSON.parse(message.Body));
       const data = await casework.save();
       const caseID = data.createcaseresponse.caseid;
