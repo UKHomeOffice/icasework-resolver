@@ -22,49 +22,41 @@ const logger = winston.createLogger({
   format: winston.format.json()
 });
 
+const logError = (type, e) => {
+  logger.log('error', `${type} submission failed status: ${e.status}`);
+  logger.log('error', `${type} submission failed message: ${e}`);
+
+  if (e.headers) {
+    logger.log('error', e.headers['x-application-error-code']);
+    logger.log('error', e.headers['x-application-error-info']);
+  }
+};
+
+const submitAudit = async opts => {
+  try {
+    if (config.audit) {
+      await db('resolver').insert(opts);
+    }
+  } catch (e) {
+    logError('Audit', e);
+  }
+};
+
 const resolver = Consumer.create({
   queueUrl: config.aws.sqs,
   handleMessage: async message => {
-    return new Promise(function (resolve, reject) {
+    try {
       const casework = new Casework(JSON.parse(message.Body));
+      const data = await casework.save();
+      const caseID = data.createcaseresponse.caseid;
 
-      casework.save()
-        .then(data => {
-          logger.info({
-            message: 'Casework submission successful',
-            caseID: data.createcaseresponse.caseid
-          });
-          if (config.audit) {
-            return db('resolver').insert({
-              caseID: data.createcaseresponse.caseid,
-              success: true
-            }).then(() => {
-              resolve();
-            }).catch(error => {
-              reject(error);
-            });
-          }
-          resolve();
-        })
-        .catch(e => {
-          logger.log('error', `Casework submission failed: ${e.status}`);
-          if (e.headers) {
-            logger.log('error', e.headers['x-application-error-code']);
-            logger.log('error', e.headers['x-application-error-info']);
-          }
+      logger.info({ caseID, message: 'Casework submission successful' });
 
-          if (config.audit) {
-            return db('resolver').insert({
-              success: false
-            }).then(() => {
-              reject(e);
-            }).catch(error => {
-              reject(error);
-            });
-          }
-          reject(e);
-        });
-    });
+      return submitAudit({ success: true, caseID });
+    } catch (e) {
+      logError('Casework', e);
+      return submitAudit({ success: false });
+    }
   }
 });
 
