@@ -46,7 +46,6 @@ const resolver = Consumer.create({
   queueUrl: config.aws.sqs,
   handleMessage: async message => {
     try {
-      console.log(JSON.parse(message.Body));
       const casework = new Casework(JSON.parse(message.Body));
       const data = await casework.save();
       const caseID = data.createcaseresponse.caseid;
