@@ -55,7 +55,8 @@ const resolver = Consumer.create({
       return submitAudit({ success: true, caseID });
     } catch (e) {
       logError('Casework', e);
-      return submitAudit({ success: false });
+      submitAudit({ success: false });
+      return Promise.reject();
     }
   }
 });
