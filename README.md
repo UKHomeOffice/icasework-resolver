@@ -2,6 +2,12 @@
 
 This app will resolve any messages on a AWS SQS queue to be submitted to iCasework via its RESTful interface.
 
+### KnexFile
+It is important to note that when upgrading `knex` it needs to be aware of the database adapter version it needs to use. For this service we use postgres through the `pg` package. The version specified in the package.json file then also needs to be included in the db knexfile, i.e. `db/knexfile.js`, which you will be able to see under `version`. Whenever `pg` is updated, this needs to be updated too otherwise the knex tool will fail trying to reach a remote DB like RDS. A standard error in this scenario looks like the following, including for any other scenarios the configuration is wrong when using knex to connect to a DB:
+```
+Knex: Timeout acquiring a connection. The pool is probably full. Are you missing a .transacting(trx) call?
+```
+
 ### Auditing
 
 The resolver will additionally connect to a postgres db and write audit data to a `resolver` table with specified credentials.
