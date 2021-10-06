@@ -56,7 +56,7 @@ const resolver = Consumer.create({
     } catch (e) {
       logError('Casework', e);
       submitAudit({ success: false });
-      return Promise.reject();
+      throw e;
     }
   }
 });
