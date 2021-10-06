@@ -24,5 +24,8 @@
     "eslint": "^7.32.0",
     "eslint-config-hof": "^1.2.1",
     "snyk": "^1.722.0"
+  },
+  "resolutions": {
+    "underscore": "^1.12.1"
   }
 }
