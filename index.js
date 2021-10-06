@@ -23,7 +23,7 @@ const logger = winston.createLogger({
 });
 
 const logError = (type, e) => {
-  logger.log('error', `${type} submission failed status: ${e.status}`);
+  logger.log('error', `${type} submission failed status: ${e.status || '5xx'}`);
   logger.log('error', `${type} submission failed message: ${e}`);
 
   if (e.headers) {
