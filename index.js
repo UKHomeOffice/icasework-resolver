@@ -49,6 +49,7 @@ const resolver = Consumer.create({
   handleMessage: async message => {
     const getCase = new GetCase(JSON.parse(message.Body));
     const submitCase = new SubmitCase(JSON.parse(message.Body));
+    const externalId = submitCase.get('ExternalId');
 
     try {
       const getCaseResponse = await getCase.fetch();
@@ -62,9 +63,9 @@ const resolver = Consumer.create({
 
         return submitAudit({ success: true, caseID });
       }
-      logger.info({ caseID: submitCase.ExternalId, message: 'Case already submitted!' });
+      logger.info({ externalId, message: 'Case already submitted!' });
     } catch (e) {
-      logError(`Case ExternalId ${submitCase.ExternalId}`, 'Casework', e);
+      logError(`Case ExternalId ${externalId}`, 'Casework', e);
       submitAudit({ success: false });
       throw e;
     }
