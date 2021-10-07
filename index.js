@@ -41,6 +41,7 @@ const submitAudit = async opts => {
   } catch (e) {
     const id = opts.caseID || 'N/A (Failed To Send)';
     logError(`iCasework Case ID ${id}`, 'Audit', e);
+    throw new Error('Audit Error');
   }
 };
 
@@ -65,7 +66,9 @@ const resolver = Consumer.create({
       }
       logger.info({ externalId, message: `Case already submitted with iCasework Case ID ${icwID}` });
     } catch (e) {
-      logError(`Case ExternalId ${externalId}`, 'Casework', e);
+      if (e.message !== 'Audit Error') {
+        logError(`Case ExternalId ${externalId}`, 'Casework', e);
+      }
       submitAudit({ success: false });
       throw e;
     }
