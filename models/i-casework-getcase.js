@@ -28,9 +28,7 @@ module.exports = class DocumentModel extends Model {
   }
 
   handleResponse(response, callback) {
-    const adjustedReponse = response;
-    adjustedReponse.body = `[${adjustedReponse.body.replace(/\n/g, '').replace(/\r/g, '').replace(/}{/g, '},{')}]`;
-    return super.handleResponse(adjustedReponse, callback);
+    return callback(null, { exists: response.statusCode === 200 });
   }
 
   fetch() {

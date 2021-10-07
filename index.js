@@ -52,10 +52,9 @@ const resolver = Consumer.create({
     const externalId = submitCase.get('ExternalId');
 
     try {
-      const getCaseResponse = await getCase.fetch();
-      const caseExists = getCaseResponse.length;
+      const case = await getCase.fetch();
 
-      if (!caseExists) {
+      if (!case.exists) {
         const data = await submitCase.save();
         const caseID = data.createcaseresponse.caseid;
 
