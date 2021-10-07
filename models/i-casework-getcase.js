@@ -1,6 +1,6 @@
 'use strict';
 
-const Model = require('hof-model');
+const Model = require('hof').model;
 const crypto = require('crypto');
 
 const config = require('../config');
@@ -16,24 +16,31 @@ module.exports = class DocumentModel extends Model {
     return crypto.createHash('md5').update(this.get('ExternalId') + date + config.icasework.secret).digest('hex');
   }
 
-  prepare(data) {
-    const params = {
+  prepare() {
+    return {
       Key: config.icasework.key,
       Signature: this.sign(),
-      CaseId: data.ExternalId,
+      ExternalId: this.get('ExternalId'),
       Format: 'json',
-      db: config.icasework.db,
-      RequestMethod: 'Online form'
+      db: config.icasework.db
     };
+  }
 
-    return Object.assign(params, this.toJSON());
+  handleResponse(response, callback) {
+    try {
+      return callback(null, response);
+    } catch (err) {
+      err.status = response.statusCode;
+      err.body = response.body;
+      return callback(err, null, response.statusCode);
+    }
+    return this.parseResponse(response.statusCode, data, callback);
   }
 
   fetch() {
     const options = this.requestConfig({});
-    options.form = this.prepare();
+    options.qs = this.prepare();
     options.method = 'GET';
-
     return this.request(options);
   }
 };

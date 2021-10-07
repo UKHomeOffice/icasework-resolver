@@ -8,6 +8,7 @@
   },
   "scripts": {
     "start": "node index.js",
+    "debug": "node --inspect index.js",
     "test:lint": "eslint . --config ./node_modules/eslint-config-hof/default.js",
     "test:snyk": "snyk config set api=SNYK_TOKEN && snyk test"
   },
@@ -15,6 +16,8 @@
   "license": "MIT",
   "dependencies": {
     "aws-sdk": "^2.699.0",
+    "dotenv": "^10.0.0",
+    "hof": "^19.11.9",
     "hof-model": "^3.1.2",
     "knex": "^0.95.11",
     "pg": "^7.15.1",
