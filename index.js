@@ -53,7 +53,7 @@ const resolver = Consumer.create({
 
     try {
       const getCaseResponse = await getCase.fetch();
-      const caseExists = getCaseResponse.status === 200;
+      const caseExists = getCaseResponse.length;
 
       if (!caseExists) {
         const data = await submitCase.save();
