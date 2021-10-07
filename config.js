@@ -35,13 +35,12 @@ module.exports = {
   icasework: {
     url: process.env.ICASEWORK_URL,
     createpath: '/createcase',
-    uploadpath: '/uploaddocuments',
     getcasepath: '/getcasedetails',
     key: process.env.ICASEWORK_KEY,
     secret: process.env.ICASEWORK_SECRET,
     type: process.env.ICASEWORK_FORM_TYPE || '',
     db: process.env.ICASEWORK_DB,
-    timeout: process.env.ICASEWORK_TIMEOUT || 20000
+    timeout: process.env.ICASEWORK_TIMEOUT || 60000
   },
   aws: {
     sqs: process.env.AWS_SQS

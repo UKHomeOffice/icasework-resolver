@@ -3,7 +3,8 @@
 
 const winston = require('winston');
 const { Consumer } = require('sqs-consumer');
-const Casework = require('./models/i-casework');
+const SubmitCase = require('./models/i-casework');
+const GetCase = require('./models/i-casework-getcase');
 const config = require('./config');
 const transports = [
   new winston.transports.Console({
@@ -22,49 +23,55 @@ const logger = winston.createLogger({
   format: winston.format.json()
 });
 
+const logError = (id, errorType, err) => {
+  logger.log('error', id);
+  logger.log('error', `${errorType} submission failed: ${err.status || '5xx'} - ${err}`);
+
+  if (err.headers) {
+    logger.log('error', err.headers['x-application-error-code']);
+    logger.log('error', err.headers['x-application-error-info']);
+  }
+};
+
+const submitAudit = async opts => {
+  try {
+    if (config.audit) {
+      await db('resolver').insert(opts);
+    }
+  } catch (e) {
+    const id = opts.caseID || 'N/A (Failed To Send)';
+    logError(`iCasework Case ID ${id}`, 'Audit', e);
+    throw new Error('Audit Error');
+  }
+};
+
 const resolver = Consumer.create({
   queueUrl: config.aws.sqs,
   handleMessage: async message => {
-    return new Promise(function (resolve, reject) {
-      const casework = new Casework(JSON.parse(message.Body));
+    const getCase = new GetCase(JSON.parse(message.Body));
+    const submitCase = new SubmitCase(JSON.parse(message.Body));
+    const externalId = submitCase.get('ExternalId');
 
-      casework.save()
-        .then(data => {
-          logger.info({
-            message: 'Casework submission successful',
-            caseID: data.createcaseresponse.caseid
-          });
-          if (config.audit) {
-            return db('resolver').insert({
-              caseID: data.createcaseresponse.caseid,
-              success: true
-            }).then(() => {
-              resolve();
-            }).catch(error => {
-              reject(error);
-            });
-          }
-          resolve();
-        })
-        .catch(e => {
-          logger.log('error', `Casework submission failed: ${e.status}`);
-          if (e.headers) {
-            logger.log('error', e.headers['x-application-error-code']);
-            logger.log('error', e.headers['x-application-error-info']);
-          }
+    try {
+      const getCaseResponse = await getCase.fetch();
+      const icwID = getCaseResponse.caseId;
 
-          if (config.audit) {
-            return db('resolver').insert({
-              success: false
-            }).then(() => {
-              reject(e);
-            }).catch(error => {
-              reject(error);
-            });
-          }
-          reject(e);
-        });
-    });
+      if (!getCaseResponse.exists) {
+        const data = await submitCase.save();
+        const caseID = data.createcaseresponse.caseid;
+
+        logger.info({ caseID, message: 'Casework submission successful' });
+
+        return submitAudit({ success: true, caseID });
+      }
+      logger.info({ externalId, message: `Case already submitted with iCasework Case ID ${icwID}` });
+    } catch (e) {
+      if (e.message !== 'Audit Error') {
+        logError(`Case ExternalId ${externalId}`, 'Casework', e);
+      }
+      submitAudit({ success: false });
+      throw e;
+    }
   }
 });
 
