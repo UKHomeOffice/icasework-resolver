@@ -27,8 +27,8 @@ module.exports = class DocumentModel extends Model {
     return params;
   }
 
-  // Try block is to get caseID. This is for logging purposes only. iCW is spurious with its response body
-  // So, in case of future changes, finally block ensures resolver continues uninterrupted
+  // Try block is to get caseID. This is for logging purposes only. iCW can be spurious with its response body
+  // So, finally block ensures resolver continues uninterrupted in the event of a parsing fail
   handleResponse(response, callback) {
     let caseId = 'N/A';
 
