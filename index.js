@@ -65,6 +65,7 @@ const resolver = Consumer.create({
         return submitAudit({ success: true, caseID });
       }
       logger.info({ externalId, message: `Case already submitted with iCasework Case ID ${icwID}` });
+      return submitAudit({ success: true, caseID: icwID });
     } catch (e) {
       if (e.message !== 'Audit Error') {
         logError(`Case ExternalId ${externalId}`, 'Casework', e);
