@@ -53,6 +53,7 @@ const resolver = Consumer.create({
 
     try {
       const getCaseResponse = await getCase.fetch();
+      const icwID = getCaseResponse.caseId;
 
       if (!getCaseResponse.exists) {
         const data = await submitCase.save();
@@ -62,7 +63,7 @@ const resolver = Consumer.create({
 
         return submitAudit({ success: true, caseID });
       }
-      logger.info({ externalId, message: 'Case already submitted!' });
+      logger.info({ externalId, message: `Case already submitted with iCasework Case ID ${icwID}` });
     } catch (e) {
       logError(`Case ExternalId ${externalId}`, 'Casework', e);
       submitAudit({ success: false });

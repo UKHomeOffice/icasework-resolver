@@ -27,8 +27,18 @@ module.exports = class DocumentModel extends Model {
     return params;
   }
 
+  // Try block is to get caseID. This is for logging purposes only. iCW is spurious with its response body
+  // So, in case of future changes, finally block ensures resolver continues uninterrupted
   handleResponse(response, callback) {
-    return callback(null, { exists: response.statusCode === 200 });
+    let caseId = 'N/A';
+
+    try {
+      const adjustedResponse = `[${response.body.replace(/\n/g, '').replace(/\r/g, '').replace(/}{/g, '},{')}]`;
+      const latestEntry = JSON.parse(adjustedResponse).reverse()[0];
+      caseId = latestEntry['CaseDetails.CaseId'];
+    } finally {
+      return callback(null, { caseId, exists: response.statusCode === 200 });
+    }
   }
 
   fetch() {
