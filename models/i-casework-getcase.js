@@ -27,13 +27,14 @@ module.exports = class DocumentModel extends Model {
     return params;
   }
 
-  // Try block is to get caseID. This is for logging purposes only. iCW can be spurious with its response body
-  // So, finally block ensures resolver continues uninterrupted in the event of a parsing fail
   handleResponse(response, callback) {
     let caseId = 'N/A';
 
     try {
+      // if duplicate entries preexist, iCW responds with line by line objects in JSON string format.
+      // This wraps them into an array before JSON parsing to prevent a parsing fail.
       const adjustedResponse = `[${response.body.replace(/\n/g, '').replace(/\r/g, '').replace(/}{/g, '},{')}]`;
+
       const latestEntry = JSON.parse(adjustedResponse).reverse()[0];
       caseId = latestEntry['CaseDetails.CaseId'];
     } finally {
