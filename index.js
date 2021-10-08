@@ -24,7 +24,9 @@ const logger = winston.createLogger({
 });
 
 const logError = (type, e) => {
-  logger.log('error', `${type} submission failed status: ${e.status}`);
+  if (e.status) {
+    logger.log('error', `${type} submission failed status: ${e.status}`);
+  }
   logger.log('error', `${type} submission failed message: ${e}`);
 
   if (e.headers) {
@@ -51,14 +53,18 @@ const resolver = Consumer.create({
       const casework = new Casework(JSON.parse(message.Body));
       const response = await getCase.fetch();
       if (response.statusCode === 200) {
-        throw new Error ('Report already exists', status: 200);
+        const e = {
+          status: 200
+        }
+        const responseJSON = JSON.parse(response.body)
+        throw new Error (`Report already exists with Case ${responseJSON['CaseDetails.CaseId']} and ExternalId ${casework.attributes.ExternalId}`);
       }
       if (response.statusCode === 400) {
         
         const data = await casework.save();
         const caseID = data.createcaseresponse.caseid;
   
-        logger.info({ caseID, message: `Casework submission successful with ExternalId ${casework.attributes.ExternalId}}` });
+        logger.info({caseID, message: `Casework submission successful with Case ID ${caseID} and ExternalId ${casework.attributes.ExternalId}`});
   
         return submitAudit({ success: true, caseID });
       }
