@@ -53,7 +53,7 @@ const submitDuplicate = async opts => {
   } catch (e) {
     const id = opts.case_id || 'N/A (Failed to send)';
     logError(`iCasework Case ID ${id}`, 'Duplicate', e);
-    throw new Error('Duplicate Audit Error')
+    throw new Error('Duplicate Audit Error');
   }
 };
 
@@ -73,11 +73,11 @@ const resolver = Consumer.create({
         const caseID = data.createcaseresponse.caseid;
 
         logger.info({ caseID, message: 'Casework submission successful' });
-        submitDuplicate( {duplicate: false, case_id: caseID, external_id: externalId })
+        submitDuplicate( {duplicate: false, case_id: caseID, external_id: externalId });
         return submitAudit({ success: true, caseID });
       }
       logger.info({ externalId, message: `Case already submitted with iCasework Case ID ${icwID}` });
-      submitDuplicate( {duplicate: true, case_id: icwID, external_id: externalId })
+      submitDuplicate( {duplicate: true, case_id: icwID, external_id: externalId });
       return submitAudit({ success: true, caseID: icwID });
     } catch (e) {
       if (e.message !== 'Audit Error') {
