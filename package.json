@@ -8,6 +8,7 @@
   },
   "scripts": {
     "start": "node index.js",
+    "dev": "nodemon -r dotenv/config index.js",
     "test:lint": "eslint . --config ./node_modules/eslint-config-hof/default.js",
     "test:snyk": "snyk config set api=SNYK_TOKEN && snyk test"
   },
@@ -24,6 +25,7 @@
   "devDependencies": {
     "eslint": "^7.32.0",
     "eslint-config-hof": "^1.2.1",
+    "nodemon": "^2.0.14",
     "snyk": "^1.722.0"
   },
   "resolutions": {
