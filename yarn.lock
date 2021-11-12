@@ -840,11 +840,6 @@ callsites@^3.0.0:
   resolved "https://registry.yarnpkg.com/callsites/-/callsites-3.1.0.tgz#b3630abd8943432f54b3f0519238e33cd7df2f73"
   integrity sha512-P8BjAsXvZS+VIDUI11hHCQEv74YT67YUi5JJFNWIqL235sBmjX4+qx9Muvls5ivyNENctx46xQLQ3aTuE7ssaQ==
 
-camelcase@^1.0.2:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/camelcase/-/camelcase-1.2.1.tgz#9bb5304d2e0b56698b2c758b08a3eaa9daa58a39"
-  integrity sha1-m7UwTS4LVmmLLHWLCKPqqdqlijk=
-
 camelcase@^6.2.0:
   version "6.2.0"
   resolved "https://registry.yarnpkg.com/camelcase/-/camelcase-6.2.0.tgz#924af881c9d525ac9d87f40d964e5cea982a1809"
@@ -859,14 +854,6 @@ caseless@~0.12.0:
   version "0.12.0"
   resolved "https://registry.yarnpkg.com/caseless/-/caseless-0.12.0.tgz#1b681c21ff84033c826543090689420d187151dc"
   integrity sha1-G2gcIf+EAzyCZUMJBolCDRhxUdw=
-
-center-align@^0.1.1:
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/center-align/-/center-align-0.1.3.tgz#aa0d32629b6ee972200411cbd4461c907bc2b7ad"
-  integrity sha1-qg0yYptu6XIgBBHL1EYckHvCt60=
-  dependencies:
-    align-text "^0.1.3"
-    lazy-cache "^1.0.3"
 
 chalk@^2.0.0:
   version "2.4.2"
@@ -2302,10 +2289,10 @@ hmac-drbg@^1.0.1:
     minimalistic-assert "^1.0.0"
     minimalistic-crypto-utils "^1.0.1"
 
-hof@^19.11.8:
-  version "19.11.8"
-  resolved "https://registry.yarnpkg.com/hof/-/hof-19.11.8.tgz#ce2e2041e4e9031f94bdc6d0e2afa52ff699e35e"
-  integrity sha512-0lWqJIJ4/L0q0zOYvnR/kuu7hZ2I8msMbWIbZBxCYmkceu68dF90/eoO/VJFfcSt/D365B/XSgYInbSFgOO7Sw==
+hof@^19.11.19:
+  version "19.11.19"
+  resolved "https://registry.yarnpkg.com/hof/-/hof-19.11.19.tgz#95b242a278fa9929da88755e614aaa59460980ab"
+  integrity sha512-Ra6f0IemiER766DZtt9b9qXqKR6En36fNag6A2TE4tIX3tEnTwYVayaGp24lKT2+MkBvxnp1XWq9u2k4z6/pRA==
   dependencies:
     aliasify "^2.1.0"
     bluebird "^3.7.2"
@@ -2337,7 +2324,7 @@ hof@^19.11.8:
     i18n-future "^2.0.0"
     i18n-lookup "^0.1.0"
     is-pdf "^1.0.0"
-    libphonenumber-js "^1.9.24"
+    libphonenumber-js "^1.9.34"
     lodash "^4.17.21"
     markdown-it "^12.2.0"
     minimatch "^3.0.3"
@@ -2357,7 +2344,7 @@ hof@^19.11.8:
     rimraf "^3.0.2"
     sass "^1.35.2"
     serve-static "^1.14.1"
-    uglify-js "^2.8.22"
+    uglify-js "^3.14.3"
     underscore "^1.12.1"
     urijs "^1.19.7"
     winston "^3.3.3"
@@ -2640,7 +2627,7 @@ is-boolean-object@^1.1.0:
     call-bind "^1.0.2"
     has-tostringtag "^1.0.0"
 
-is-buffer@^1.1.0, is-buffer@^1.1.5:
+is-buffer@^1.1.0:
   version "1.1.6"
   resolved "https://registry.yarnpkg.com/is-buffer/-/is-buffer-1.1.6.tgz#efaa2ea9daa0d7ab2ea13a97b2b8ad51fefbe8be"
   integrity sha512-NcdALwpXkTm5Zvvbk7owOUSvVvBKDgKP5/ewfXEznmQFfs4ZRmanOeKBTjRVjka3QFoN6XJ+9F3USqfHqTaU5w==
@@ -2981,10 +2968,10 @@ levn@^0.4.1:
     prelude-ls "^1.2.1"
     type-check "~0.4.0"
 
-libphonenumber-js@^1.9.24:
-  version "1.9.36"
-  resolved "https://registry.yarnpkg.com/libphonenumber-js/-/libphonenumber-js-1.9.36.tgz#ba56c2f5600ba34677389d0acc1a5fe8a1206561"
-  integrity sha512-eaQRvOHmBKOxd2TKNml5lx1/7+nm4MftXTUXPTcBS70mm7U3AUNBNPF99tNBpkrYQNu+YFP553ranMsbshqqTA==
+libphonenumber-js@^1.9.34:
+  version "1.9.42"
+  resolved "https://registry.yarnpkg.com/libphonenumber-js/-/libphonenumber-js-1.9.42.tgz#41f41d540f89b6e3fd36de7120ddb57b3a468c77"
+  integrity sha512-UBtU0ylpZPKPT8NLIyQJWj/DToMFxmo3Fm5m6qDc0LATvf0SY0qUhaurCEvukAB9Fo+Ia2Anjzqwoupaa64fXg==
 
 linkify-it@^3.0.1:
   version "3.0.3"
@@ -4075,13 +4062,6 @@ reusify@^1.0.4:
   resolved "https://registry.yarnpkg.com/reusify/-/reusify-1.0.4.tgz#90da382b1e126efc02146e90845a88db12925d76"
   integrity sha512-U9nH88a3fc/ekCF1l0/UP1IosiuIjyTh7hBvXVMHYgVcfGvt897Xguj2UOLDeI5BG2m7/uwyaLVT6fbtCwTyzw==
 
-right-align@^0.1.1:
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/right-align/-/right-align-0.1.3.tgz#61339b722fe6a3515689210d24e14c96148613ef"
-  integrity sha1-YTObci/mo1FWiSENJOFMlhSGE+8=
-  dependencies:
-    align-text "^0.1.1"
-
 rimraf@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/rimraf/-/rimraf-3.0.2.tgz#f1a5402ba6220ad52cc1282bac1ae3aa49fd061a"
@@ -4302,7 +4282,7 @@ snyk@^1.722.0:
   resolved "https://registry.yarnpkg.com/snyk/-/snyk-1.731.0.tgz#d2fe4cdabf2fc471f57f3b5b5310242f9f85b546"
   integrity sha512-1bRMFH7ZrjmaUkBnbOtCmLSSpAlj9vPKndBiP4hjCLysN8peVZ9SMdxGWhhJsmvqmRZYCdmPQyL+sKev8dsRkw==
 
-source-map@^0.5.0, source-map@~0.5.1, source-map@~0.5.3:
+source-map@^0.5.0, source-map@~0.5.3:
   version "0.5.7"
   resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.5.7.tgz#8a039d2d1021d22d1ea14c80d8ea468ba2ef3fcc"
   integrity sha1-igOdLRAh0i0eoUyA2OpGi6LvP8w=
@@ -4685,20 +4665,10 @@ uc.micro@^1.0.1, uc.micro@^1.0.5:
   resolved "https://registry.yarnpkg.com/uc.micro/-/uc.micro-1.0.6.tgz#9c411a802a409a91fc6cf74081baba34b24499ac"
   integrity sha512-8Y75pvTYkLJW2hWQHXxoqRgV7qb9B+9vFEtidML+7koHUFapnVJAZ6cKs+Qjz5Aw3aZWHMC6u0wJE3At+nSGwA==
 
-uglify-js@^2.8.22:
-  version "2.8.29"
-  resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-2.8.29.tgz#29c5733148057bb4e1f75df35b7a9cb72e6a59dd"
-  integrity sha1-KcVzMUgFe7Th913zW3qcty5qWd0=
-  dependencies:
-    source-map "~0.5.1"
-    yargs "~3.10.0"
-  optionalDependencies:
-    uglify-to-browserify "~1.0.0"
-
-uglify-to-browserify@~1.0.0:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/uglify-to-browserify/-/uglify-to-browserify-1.0.2.tgz#6e0924d6bda6b5afe349e39a6d632850a0f882b7"
-  integrity sha1-bgkk1r2mta/jSeOabWMoUKD4grc=
+uglify-js@^3.14.3:
+  version "3.14.3"
+  resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-3.14.3.tgz#c0f25dfea1e8e5323eccf59610be08b6043c15cf"
+  integrity sha512-mic3aOdiq01DuSVx0TseaEzMIVqebMZ0Z3vaeDhFEh9bsc24hV1TFvN74reA2vs08D0ZWfNjAcJ3UbVLaBss+g==
 
 uid-safe@2.1.5, uid-safe@~2.1.5:
   version "2.1.5"
@@ -5012,13 +4982,3 @@ yallist@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/yallist/-/yallist-4.0.0.tgz#9bb92790d9c0effec63be73519e11a35019a3a72"
   integrity sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A==
-
-yargs@~3.10.0:
-  version "3.10.0"
-  resolved "https://registry.yarnpkg.com/yargs/-/yargs-3.10.0.tgz#f7ee7bd857dd7c1d2d38c0e74efbd681d1431fd1"
-  integrity sha1-9+572FfdfB0tOMDnTvvWgdFDH9E=
-  dependencies:
-    camelcase "^1.0.2"
-    cliui "^2.1.0"
-    decamelize "^1.0.0"
-    window-size "0.1.0"
