@@ -33,10 +33,10 @@ const logError = (id, errorType, err) => {
   }
 };
 
-const submitAudit = async opts => {
+const submitAudit = async (table, opts) => {
   try {
     if (config.audit) {
-      await db('resolver').insert(opts);
+      await db(table).insert(opts);
     }
   } catch (e) {
     const id = opts.caseID || 'N/A (Failed To Send)';
@@ -45,47 +45,33 @@ const submitAudit = async opts => {
   }
 };
 
-const submitDuplicate = async opts => {
-  try {
-    if (config.audit) {
-      await db('duplicates').insert(opts);
-    }
-  } catch (e) {
-    const id = opts.case_id || 'N/A (Failed to send)';
-    logError(`iCasework Case ID ${id}`, 'Duplicate', e);
-    throw new Error('Duplicate Table Error');
-  }
-};
-
 const resolver = Consumer.create({
   queueUrl: config.aws.sqs,
   handleMessage: async message => {
     const getCase = new GetCase(JSON.parse(message.Body));
     const submitCase = new SubmitCase(JSON.parse(message.Body));
-    const externalId = getCase.get('ExternalId');
+    const externalId = submitCase.get('ExternalId');
 
     try {
       const getCaseResponse = await getCase.fetch();
-      const icwID = getCaseResponse.caseId;
+      let caseID = getCaseResponse.caseId;
 
       if (!getCaseResponse.exists) {
         const data = await submitCase.save();
-        const caseID = data.createcaseresponse.caseid;
+        caseID = data.createcaseresponse.caseid;
 
         logger.info({ caseID, message: 'Casework submission successful' });
-        submitDuplicate({duplicate: false, case_id: caseID, external_id: externalId})
-          .catch(err => logger.log('error', err.message));
-        return submitAudit({ success: true, caseID });
+        return submitAudit('resolver', { success: true, caseID });
       }
-      logger.info({ externalId, message: `Case already submitted with iCasework Case ID ${icwID}` });
-      submitDuplicate( {duplicate: true, case_id: icwID, external_id: externalId })
+      logger.info({ externalId, message: `Case already submitted with iCasework Case ID ${caseID}` });
+      submitAudit('duplicates', {case_id: caseID, external_id: externalId })
         .catch(err => logger.log('error', err.message));
-      return submitAudit({ success: true, caseID: icwID });
+      return submitAudit('resolver', { success: true, caseID: caseID });
     } catch (e) {
       if (e.message !== 'Audit Error') {
         logError(`Case ExternalId ${externalId}`, 'Casework', e);
       }
-      submitAudit({ success: false });
+      submitAudit('resolver', { success: false });
       throw e;
     }
   }
