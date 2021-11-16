@@ -57,7 +57,7 @@ const resolver = Consumer.create({
   handleMessage: async message => {
     const getCase = new GetCase(JSON.parse(message.Body));
     const submitCase = new SubmitCase(JSON.parse(message.Body));
-    const externalId = submitCase.get('ExternalId');
+    const externalID = submitCase.get('ExternalId');
 
     try {
       const getCaseResponse = await getCase.fetch();
@@ -68,16 +68,16 @@ const resolver = Consumer.create({
         caseID = data.createcaseresponse.caseid;
 
         logger.info({ caseID, message: 'Casework submission successful' });
-        return submitAudit('resolver', { success: true, case_ID: caseID, externalID: externalId});
+        return submitAudit('resolver', { success: true, case_ID, externalID});
       }
-      logger.info({ externalId, message: `Case already submitted with iCasework Case ID ${caseID}` });
-      return submitAudit('duplicates', { success: true, case_ID: caseID, externalID: externalId });
+      logger.info({ externalID, message: `Case already submitted with iCasework Case ID ${caseID}` });
+      return submitAudit('duplicates', { success: true, caseID, externalID });
     } catch (e) {
       if (e.message !== 'Audit Error') {
-        logError(`Case ExternalId ${externalId}`, 'Casework', e);
+        logError(`Case ExternalId ${externalID}`, 'Casework', e);
       }
-      submitAudit('resolver', { success: false});
-      throw e;
+      return submitAudit('resolver', { success: false});
+      // throw new Error('Unexpected message handler failure: ');
     }
   }
 });
