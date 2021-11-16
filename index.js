@@ -61,18 +61,19 @@ const resolver = Consumer.create({
         caseID = data.createcaseresponse.caseid;
 
         logger.info({ caseID, message: 'Casework submission successful' });
-        return submitAudit('resolver', { success: true, caseID });
+        return await submitAudit('resolver', { success: true, caseID });
       }
 
       logger.info({ externalID, message: `Case already submitted with iCasework Case ID ${caseID}` });
-      submitAudit('duplicates', { caseID, externalID });
+      await submitAudit('duplicates', { caseID, externalID });
 
-      return submitAudit('resolver', { success: true, caseID });
+      return await submitAudit('resolver', { success: true, caseID });
     } catch (e) {
       if (e.message !== 'Audit Error') {
         logError(`Case externalID ${externalID}`, 'Casework', e);
       }
-      submitAudit('resolver', { success: false });
+
+      await submitAudit('resolver', { success: false });
       throw e;
     }
   }
