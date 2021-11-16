@@ -33,14 +33,16 @@ const logError = (id, errorType, err) => {
   }
 };
 
-const submitAudit = async (duplicate, opts) => {
+const submitAudit = async (table, opts) => {
   try {
     if (config.audit) {
-      if(duplicate) {
-        let{success, ...duplicatesOpts} = opts
-        await db('duplicates').insert(duplicatesOpts);
+      if (table === 'duplicates') {
+        // eslint-disable-next-line no-unused-vars
+        const{success, ...duplicatesOpts} = opts;
+        await db(table).insert(duplicatesOpts);
       }
-      let{externalID, ...resolverOpts} = opts
+      // eslint-disable-next-line no-unused-vars
+      const{externalID, ...resolverOpts} = opts;
       await db('resolver').insert(resolverOpts);
     }
   } catch (e) {
@@ -66,15 +68,15 @@ const resolver = Consumer.create({
         caseID = data.createcaseresponse.caseid;
 
         logger.info({ caseID, message: 'Casework submission successful' });
-        return submitAudit(false, { success: true, caseID , externalID: externalId});
+        return submitAudit('resolver', { success: true, case_ID: caseID, externalID: externalId});
       }
       logger.info({ externalId, message: `Case already submitted with iCasework Case ID ${caseID}` });
-      return submitAudit(true, { success: true, caseID: caseID, externalID: externalId });
+      return submitAudit('duplicates', { success: true, case_ID: caseID, externalID: externalId });
     } catch (e) {
       if (e.message !== 'Audit Error') {
         logError(`Case ExternalId ${externalId}`, 'Casework', e);
       }
-      submitAudit(false, { success: false})
+      submitAudit('resolver', { success: false});
       throw e;
     }
   }

@@ -9,6 +9,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon -r dotenv/config index.js",
+    "debug": "nodemon -r dotenv/config --inspect index.js",
     "test:lint": "eslint . --config ./node_modules/eslint-config-hof/default.js",
     "test:snyk": "snyk config set api=SNYK_TOKEN && snyk test"
   },
