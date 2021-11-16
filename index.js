@@ -33,10 +33,15 @@ const logError = (id, errorType, err) => {
   }
 };
 
-const submitAudit = async (table, opts) => {
+const submitAudit = async (duplicate, opts) => {
   try {
     if (config.audit) {
-      await db(table).insert(opts);
+      if(duplicate) {
+        let{success, ...duplicatesOpts} = opts
+        await db('duplicates').insert(duplicatesOpts);
+      }
+      let{externalID, ...resolverOpts} = opts
+      await db('resolver').insert(resolverOpts);
     }
   } catch (e) {
     const id = opts.caseID || 'N/A (Failed To Send)';
@@ -61,17 +66,15 @@ const resolver = Consumer.create({
         caseID = data.createcaseresponse.caseid;
 
         logger.info({ caseID, message: 'Casework submission successful' });
-        return submitAudit('resolver', { success: true, caseID });
+        return submitAudit(false, { success: true, caseID , externalID: externalId});
       }
       logger.info({ externalId, message: `Case already submitted with iCasework Case ID ${caseID}` });
-      submitAudit('duplicates', {case_id: caseID, external_id: externalId })
-        .catch(err => logger.log('error', err.message));
-      return submitAudit('resolver', { success: true, caseID: caseID });
+      return submitAudit(true, { success: true, caseID: caseID, externalID: externalId });
     } catch (e) {
       if (e.message !== 'Audit Error') {
         logError(`Case ExternalId ${externalId}`, 'Casework', e);
       }
-      submitAudit('resolver', { success: false });
+      submitAudit(false, { success: false})
       throw e;
     }
   }
