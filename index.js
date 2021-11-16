@@ -34,9 +34,10 @@ const logError = (id, errorType, err) => {
 };
 
 const submitAudit = (type, opts) => {
-  return !config.audit ?
-    Promise.resolve() :
-    db(type).insert(opts).catch(e => {
+  if (!config.audit) {
+    return Promise.resolve();
+  }
+  return db(type).insert(opts).catch(e => {
       throw new Error('Audit Error');
     });
 };
@@ -88,30 +89,6 @@ const resolver = Consumer.create({
       } catch (e) {
         return handleError(caseID, externalID, reject, e);
       }
-
-      return getCase.fetch()
-        .then(getCaseResponse => {
-          caseID = getCaseResponse.caseId;
-
-          if (!getCaseResponse.exists) {
-            return submitCase.save()
-              .then(data => {
-                caseID = data.createcaseresponse.caseid;
-
-                logger.info({ caseID, message: 'Casework submission successful' });
-
-                return submitAudit('resolver', { success: true, caseID }).then(resolve);
-              })
-              .catch(e => handleError(caseID, externalID, reject, e));
-          }
-
-          logger.info({ externalID, message: `Case already submitted with iCasework Case ID ${caseID}` });
-
-          return submitAudit('duplicates', { caseID, externalID })
-            .then(() => submitAudit('resolver', { success: true, caseID }))
-            .then(resolve);
-        })
-        .catch(e => handleError(caseID, externalID, reject, e));
     });
   }
 });
