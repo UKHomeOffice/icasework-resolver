@@ -8,6 +8,7 @@
   },
   "scripts": {
     "start": "node index.js",
+    "dev": "nodemon -r dotenv/config index.js",
     "test:lint": "eslint . --config ./node_modules/eslint-config-hof/default.js",
     "test:snyk": "snyk config set api=SNYK_TOKEN && snyk test"
   },
@@ -17,6 +18,7 @@
     "aws-sdk": "^2.699.0",
     "hof": "^19.11.8",
     "knex": "^0.95.11",
+    "nodemon": "^2.0.15",
     "pg": "^8.7.1",
     "sqs-consumer": "^5.4.0",
     "winston": "^3.2.1"
