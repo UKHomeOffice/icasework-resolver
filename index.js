@@ -37,9 +37,9 @@ const submitAudit = (type, opts) => {
   if (!config.audit) {
     return Promise.resolve();
   }
-  return db(type).insert(opts).catch(e => {
-      throw new Error('Audit Error');
-    });
+  return db(type).insert(opts).catch(() => {
+    throw new Error('Audit Error');
+  });
 };
 
 const handleError = async (caseID, externalID, reject, err) => {
