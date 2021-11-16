@@ -37,15 +37,15 @@ const submitAudit = (type, opts) => {
   if (!config.audit) {
     return Promise.resolve();
   }
-  return db(type).insert(opts).catch(() => {
-    throw new Error('Audit Error');
+  return db(type).insert(opts).catch(e => {
+    throw new Error(`Audit Error - ${e.message || e}`);
   });
 };
 
 const handleError = async (caseID, externalID, reject, err) => {
   const id = caseID || 'N/A (Failed To Send)';
 
-  if (err.message !== 'Audit Error') {
+  if (!err.message.includes('Audit Error')) {
     logError(`Case externalID ${externalID} - iCasework Case ID ${id}`, 'Casework', err);
   }
 
