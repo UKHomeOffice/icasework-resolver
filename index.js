@@ -45,37 +45,47 @@ const submitAudit = async (type, opts) => {
   }
 };
 
+const handleError = (externalID, reject, e) => {
+  if (e.message !== 'Audit Error') {
+    logError(`Case externalID ${externalID}`, 'Casework', e);
+  }
+
+  submitAudit('resolver', { success: false });
+  return reject(e);
+};
+
 const resolver = Consumer.create({
   queueUrl: config.aws.sqs,
   handleMessage: async message => {
-    const getCase = new GetCase(JSON.parse(message.Body));
-    const submitCase = new SubmitCase(JSON.parse(message.Body));
-    const externalID = submitCase.get('ExternalId');
+    return new Promise(function (resolve, reject) {
+      const getCase = new GetCase(JSON.parse(message.Body));
+      const submitCase = new SubmitCase(JSON.parse(message.Body));
+      const externalID = submitCase.get('ExternalId');
+      let caseID;
 
-    try {
-      const getCaseResponse = await getCase.fetch();
-      let caseID = getCaseResponse.caseId;
+      return getCase.fetch()
+        .then(getCaseResponse => {
+          caseID = getCaseResponse.caseId;
 
-      if (!getCaseResponse.exists) {
-        const data = await submitCase.save();
-        caseID = data.createcaseresponse.caseid;
+          if (!getCaseResponse.exists) {
+            return submitCase.save()
+              .then(data => {
+                caseID = data.createcaseresponse.caseid;
 
-        logger.info({ caseID, message: 'Casework submission successful' });
-        return await submitAudit('resolver', { success: true, caseID });
-      }
+                logger.info({ caseID, message: 'Casework submission successful' });
+                submitAudit('resolver', { success: true, caseID });
+                return resolve();
+              })
+              .catch(e => handleError(externalID, reject, e));
+          }
 
-      logger.info({ externalID, message: `Case already submitted with iCasework Case ID ${caseID}` });
-      await submitAudit('duplicates', { caseID, externalID });
-
-      return await submitAudit('resolver', { success: true, caseID });
-    } catch (e) {
-      if (e.message !== 'Audit Error') {
-        logError(`Case externalID ${externalID}`, 'Casework', e);
-      }
-
-      await submitAudit('resolver', { success: false });
-      throw e;
-    }
+          logger.info({ externalID, message: `Case already submitted with iCasework Case ID ${caseID}` });
+          submitAudit('duplicates', { caseID, externalID });
+          submitAudit('resolver', { success: true, caseID });
+          return resolve();
+        })
+        .catch(e => handleError(externalID, reject, e));
+    });
   }
 });
 
