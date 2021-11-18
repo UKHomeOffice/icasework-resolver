@@ -50,7 +50,7 @@ const handleError = async (caseID, externalID, reject, err) => {
   }
 
   try {
-    await submitAudit('resolver', { success: false });
+    await submitAudit('resolver', { success: false, caseID, externalID });
     return reject(err);
   } catch (auditErr) {
     logError(`iCasework Case ID ${id} - ExternalId ${externalID}`, 'Audit', auditErr);
@@ -77,14 +77,14 @@ const resolver = Consumer.create({
 
           logger.info({ caseID, message: 'Casework submission successful' });
 
-          await submitAudit('resolver', { success: true, caseID });
+          await submitAudit('resolver', { success: true, caseID, externalID });
           return resolve();
         }
 
         logger.info({ externalID, message: `Case already submitted with iCasework Case ID ${caseID}` });
 
         await submitAudit('duplicates', { caseID, externalID });
-        await submitAudit('resolver', { success: true, caseID });
+        await submitAudit('resolver', { success: true, caseID, externalID });
         return resolve();
       } catch (e) {
         return handleError(caseID, externalID, reject, e);
