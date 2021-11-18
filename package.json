@@ -1,6 +1,6 @@
 {
   "name": "modern-slavery-resolver",
-  "version": "1.0.0",
+  "version": "4.1.0",
   "description": "",
   "main": "index.js",
   "engines": {
@@ -15,8 +15,8 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "aws-sdk": "^2.699.0",
-    "hof": "^19.11.8",
+    "aws-sdk": "^2.1031.0",
+    "hof": "^19.11.19",
     "knex": "^0.95.11",
     "pg": "^8.7.1",
     "sqs-consumer": "^5.4.0",

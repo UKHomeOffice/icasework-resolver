@@ -33,46 +33,63 @@ const logError = (id, errorType, err) => {
   }
 };
 
-const submitAudit = async opts => {
+const submitAudit = (type, opts) => {
+  if (!config.audit) {
+    return Promise.resolve();
+  }
+  return db(type).insert(opts).catch(e => {
+    throw new Error(`Audit Error - ${e.message || e}`);
+  });
+};
+
+const handleError = async (caseID, externalID, reject, err) => {
+  const id = caseID || 'N/A (Failed To Send)';
+
+  if (!err.message.includes('Audit Error')) {
+    logError(`Case externalID ${externalID} - iCasework Case ID ${id}`, 'Casework', err);
+  }
+
   try {
-    if (config.audit) {
-      await db('resolver').insert(opts);
-    }
-  } catch (e) {
-    const id = opts.caseID || 'N/A (Failed To Send)';
-    logError(`iCasework Case ID ${id}`, 'Audit', e);
-    throw new Error('Audit Error');
+    await submitAudit('resolver', { success: false, caseID, externalID });
+    return reject(err);
+  } catch (auditErr) {
+    logError(`iCasework Case ID ${id} - ExternalId ${externalID}`, 'Audit', auditErr);
+    return reject(auditErr);
   }
 };
 
 const resolver = Consumer.create({
   queueUrl: config.aws.sqs,
   handleMessage: async message => {
-    const getCase = new GetCase(JSON.parse(message.Body));
-    const submitCase = new SubmitCase(JSON.parse(message.Body));
-    const externalId = submitCase.get('ExternalId');
+    return new Promise(async (resolve, reject) => {
+      const getCase = new GetCase(JSON.parse(message.Body));
+      const submitCase = new SubmitCase(JSON.parse(message.Body));
+      const externalID = submitCase.get('ExternalId');
+      let caseID;
 
-    try {
-      const getCaseResponse = await getCase.fetch();
-      const icwID = getCaseResponse.caseId;
+      try {
+        const getCaseResponse = await getCase.fetch();
+        caseID = getCaseResponse.caseId;
 
-      if (!getCaseResponse.exists) {
-        const data = await submitCase.save();
-        const caseID = data.createcaseresponse.caseid;
+        if (!getCaseResponse.exists) {
+          const data = await submitCase.save();
+          caseID = data.createcaseresponse.caseid;
 
-        logger.info({ caseID, message: 'Casework submission successful' });
+          logger.info({ caseID, message: 'Casework submission successful' });
 
-        return submitAudit({ success: true, caseID });
+          await submitAudit('resolver', { success: true, caseID, externalID });
+          return resolve();
+        }
+
+        logger.info({ externalID, message: `Case already submitted with iCasework Case ID ${caseID}` });
+
+        await submitAudit('duplicates', { caseID, externalID });
+        await submitAudit('resolver', { success: true, caseID, externalID });
+        return resolve();
+      } catch (e) {
+        return handleError(caseID, externalID, reject, e);
       }
-      logger.info({ externalId, message: `Case already submitted with iCasework Case ID ${icwID}` });
-      return submitAudit({ success: true, caseID: icwID });
-    } catch (e) {
-      if (e.message !== 'Audit Error') {
-        logError(`Case ExternalId ${externalId}`, 'Casework', e);
-      }
-      submitAudit({ success: false });
-      throw e;
-    }
+    });
   }
 });
 

@@ -1,0 +1,9 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.19.0
+# ignores vulnerabilities until expiry date; change duration by modifying expiry date
+ignore:
+  SNYK-JS-JSONSCHEMA-1920922:
+    - hof > request > http-signature > jsprim > json-schema:
+        reason: Need to replace request module in hof
+        expires: '2022-12-18T14:49:41.738Z'
+patch: {}
