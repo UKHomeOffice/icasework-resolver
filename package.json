@@ -15,7 +15,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "aws-sdk": "^2.699.0",
+    "aws-sdk": "^2.1031.0",
     "hof": "^19.11.19",
     "knex": "^0.95.11",
     "pg": "^8.7.1",
