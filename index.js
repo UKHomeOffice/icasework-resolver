@@ -1,27 +1,27 @@
 /* eslint-disable consistent-return, no-console */
 'use strict';
 
-const winston = require('winston');
+const { createLogger, format, transports } = require('winston');
+const { combine, timestamp, json } = format;
 const { Consumer } = require('sqs-consumer');
 const SubmitCase = require('./models/i-casework');
 const GetCase = require('./models/i-casework-getcase');
 const config = require('./config');
-const transports = [
-  new winston.transports.Console({
-    level: 'info',
-    handleExceptions: true
-  })
-];
+const logger = createLogger({
+  format: combine(
+    timestamp(),
+    json()
+  ),
+  transports: [
+    new transports.Console({level: 'info',
+      handleExceptions: true
+    })]
+});
 let db;
 
 if (config.audit) {
   db = require('./db');
 }
-
-const logger = winston.createLogger({
-  transports,
-  format: winston.format.json()
-});
 
 const logError = (id, errorType, err) => {
   logger.log('error', id);
