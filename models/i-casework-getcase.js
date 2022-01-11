@@ -6,6 +6,11 @@ const crypto = require('crypto');
 const config = require('../config');
 
 module.exports = class DocumentModel extends Model {
+  constructor(attributes, options) {
+    super(attributes, options);
+    this.options.timeout = this.options.timeout || config.icasework.fetchTimeout;
+  }
+
   url() {
     // we are just building up the url with the path
     return config.icasework.url + config.icasework.getcasepath;
