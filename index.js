@@ -72,7 +72,7 @@ const resolver = Consumer.create({
         requestType = 'GET';
         const getCaseResponse = await getCase.fetch();
         const isCaseFound = (getCaseResponse.exists ? 'found' : 'not found');
-        logger.info({ externalID, message: `Casework GET request successful. externalId:`+
+        logger.info({ externalID, message: 'Casework GET request successful. externalId:' +
           `${externalID} was ${isCaseFound}`});
         caseID = getCaseResponse.caseId;
 
