@@ -23,8 +23,8 @@ if (config.audit) {
   db = require('./db');
 }
 
-const logError = (id, errorType, err) => {
-  logger.log('error', id);
+const logError = (caseErrorMessageWithIDs, errorType, err) => {
+  logger.log('error', caseErrorMessageWithIDs);
   logger.log('error', `${errorType} submission failed: ${err.status || '5xx'} - ${err}`);
 
   if (err.headers) {
@@ -42,11 +42,11 @@ const submitAudit = (type, opts) => {
   });
 };
 
-const handleError = async (caseID, externalID, reject, err) => {
+const handleError = async (caseID, externalID, requestType, reject, err) => {
   const id = caseID || 'N/A (Failed To Send)';
 
   if (!err.message.includes('Audit Error')) {
-    logError(`Case externalID ${externalID} - iCasework Case ID ${id}`, 'Casework', err);
+    logError(`${requestType} request: Case externalID ${externalID} - iCasework Case ID ${id}`, 'Casework', err);
   }
 
   try {
@@ -66,16 +66,22 @@ const resolver = Consumer.create({
       const submitCase = new SubmitCase(JSON.parse(message.Body));
       const externalID = submitCase.get('ExternalId');
       let caseID;
+      let requestType = 'N/A';
 
       try {
+        requestType = 'GET';
         const getCaseResponse = await getCase.fetch();
+        const isCaseFound = (getCaseResponse.exists ? 'found' : 'not found');
+        logger.info({ externalID, message: 'Casework GET request successful. externalId:' +
+          `${externalID} was ${isCaseFound}`});
         caseID = getCaseResponse.caseId;
 
         if (!getCaseResponse.exists) {
+          requestType = 'CREATECASE';
           const data = await submitCase.save();
           caseID = data.createcaseresponse.caseid;
 
-          logger.info({ caseID, message: 'Casework submission successful' });
+          logger.info({ caseID, externalID, message: 'Casework submission successful' });
 
           await submitAudit('resolver', { success: true, caseID, externalID });
           return resolve();
@@ -87,7 +93,7 @@ const resolver = Consumer.create({
         await submitAudit('resolver', { success: true, caseID, externalID });
         return resolve();
       } catch (e) {
-        return handleError(caseID, externalID, reject, e);
+        return handleError(caseID, externalID, requestType, reject, e);
       }
     });
   }
