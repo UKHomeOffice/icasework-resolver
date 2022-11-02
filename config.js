@@ -39,7 +39,8 @@ module.exports = {
     key: process.env.ICASEWORK_KEY,
     secret: process.env.ICASEWORK_SECRET,
     type: process.env.ICASEWORK_FORM_TYPE || '',
-    db: process.env.ICASEWORK_DB,
+    // db: process.env.ICASEWORK_DB,
+    db: 'nrmnew',
     timeout: +process.env.ICASEWORK_TIMEOUT || 60000,
     fetchTimeout: +process.env.ICASEWORK_FETCH_TIMEOUT || 30000
   },
