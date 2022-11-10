@@ -1,6 +1,6 @@
 # iCasework Resolver
 
-This app will resolve any messages on a AWS SQS queue to be submitted to iCasework via its RESTful interface.
+This app will resolve any messages on a AWS SQS queue to be submitted to iCasework via its RESTful interface
 
 ## iCasework Docs
 API docs for iCasework can be found here https://icasework.atlassian.net/wiki/spaces/UsefulFeedback/overview?homepageId=15171588
