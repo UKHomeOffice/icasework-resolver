@@ -37,20 +37,25 @@ module.exports = class DocumentModel extends Model {
     try {
       // if duplicate entries preexist, iCW responds with line by line objects in JSON string format.
       // This wraps them into an array before JSON parsing to prevent a parsing fail.
-      const adjustedResponse = `[${response.body.replace(/\n/g, '').replace(/\r/g, '').replace(/}{/g, '},{')}]`;
-
+      const adjustedResponse = `[${response.data.replace(/\n/g, '').replace(/\r/g, '').replace(/}{/g, '},{')}]`;
       const latestEntry = JSON.parse(adjustedResponse).reverse()[0];
       caseId = latestEntry['CaseDetails.CaseId'];
     } finally {
-      return callback(null, { caseId, exists: response.statusCode === 200 });
+      return callback(null, { caseId, exists: response.status === 200 });
     }
   }
 
   fetch() {
-    const options = this.requestConfig({});
-    options.qs = this.prepare();
-    options.method = 'GET';
-
-    return this.request(options);
+    const params = {
+      url: this.url(),
+      method: 'GET',
+      params: this.prepare()
+    };
+    return this._request(params).then(response => {
+      return this.handleResponse(response.data);
+    })
+      .catch(err => {
+        return err;
+      });
   }
 };
