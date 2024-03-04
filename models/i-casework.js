@@ -2,7 +2,6 @@
 
 const Model = require('hof').model;
 const crypto = require('crypto');
-
 const config = require('../config');
 
 module.exports = class CaseworkModel extends Model {
@@ -12,7 +11,7 @@ module.exports = class CaseworkModel extends Model {
   }
 
   url() {
-    return config.icasework.url + config.icasework.createpath;
+    return `${config.icasework.url}${config.icasework.createpath}?db=${config.icasework.db}`;
   }
 
   prepare() {
@@ -33,11 +32,16 @@ module.exports = class CaseworkModel extends Model {
     return crypto.createHash('md5').update(date + config.icasework.secret).digest('hex');
   }
 
-  save() {
-    const options = this.requestConfig({});
-    options.form = this.prepare();
-    options.method = 'POST';
-
-    return this.request(options);
+  async save() {
+    return Promise.resolve(this.prepare()).then(async data => {
+      const params = {
+        url: this.url(),
+        data,
+        timeout: config.icasework.timeout,
+        method: 'POST'
+      };
+      const response = await this._request(params);
+      return response;
+    });
   }
 };
