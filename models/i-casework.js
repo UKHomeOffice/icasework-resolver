@@ -5,7 +5,6 @@ const axios = require('axios');
 const config = require('../config');
 
 module.exports = class CaseworkModel {
-
   prepare() {
     const date = (new Date()).toISOString().split('T')[0];
     const params = {
