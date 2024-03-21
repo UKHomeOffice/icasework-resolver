@@ -41,8 +41,8 @@ module.exports = class DocumentModel {
       // This wraps them into an array before JSON parsing to prevent a parsing fail.
       const adjustedResponse = `[${response.body.replace(/\n/g, '').replace(/\r/g, '').replace(/}{/g, '},{')}]`;
       const adjustedResponse2 = `[${response.data.replace(/\n/g, '').replace(/\r/g, '').replace(/}{/g, '},{')}]`;
-      console.log('adjustedResponse ', adjustedResponse);
-      console.log('adjustedResponse2 ', adjustedResponse2);
+      console.log('**************adjustedResponse ', adjustedResponse);
+      console.log('*************adjustedResponse2 ', adjustedResponse2);
       const latestEntry = JSON.parse(adjustedResponse).reverse()[0];
       caseId = latestEntry['CaseDetails.CaseId'];
       console.log(caseId);
@@ -51,18 +51,24 @@ module.exports = class DocumentModel {
     }
   }
 
-  async fetch() {
-    const data = await Promise.resolve(this.prepare());
-    const url = `${config.icasework.url}${config.icasework.getcasepath}?db=${config.icasework.db}`;
-    const response = await axios.get(url, data, { timeout: config.icasework.timeout || config.icasework.fetchTimeout });
-    return await response;
-  }
+
+  // fetch() {
+  //   const options = this.requestConfig({});
+  //   options.qs = this.prepare();
+  //   options.method = 'GET';
+
+  //   return this.request(options);
+  // }
 
   fetch() {
-    const options = this.requestConfig({});
-    options.qs = this.prepare();
-    options.method = 'GET';
-
-    return this.request(options);
+    return axios.get(`${config.icasework.url}${config.icasework.getcasepath}`, {
+      params: this.prepare()
+    }).then(response => {
+      console.log('*****************Response ', response);
+      return this.handleResponse(response.data);
+    })
+      .catch(err => {
+        return err;
+      });
   }
 };
