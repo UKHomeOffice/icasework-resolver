@@ -21,7 +21,7 @@
     "hof": "^19.11.24",
     "knex": "^0.95.11",
     "pg": "^8.7.1",
-    "sqs-consumer": "^5.4.0",
+    "sqs-consumer": "^5.8.0",
     "winston": "^3.2.1"
   },
   "devDependencies": {
