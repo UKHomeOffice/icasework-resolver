@@ -1,24 +1,15 @@
 'use strict';
 
-const Model = require('hof').model;
 const crypto = require('crypto');
-
+const axios = require('axios');
 const config = require('../config');
 
-module.exports = class CaseworkModel extends Model {
-  constructor(attributes, options) {
-    super(attributes, options);
-    this.options.timeout = this.options.timeout || config.icasework.timeout;
-  }
-
-  url() {
-    return config.icasework.url + config.icasework.createpath;
-  }
-
+module.exports = class CaseworkModel {
   prepare() {
+    const date = (new Date()).toISOString().split('T')[0];
     const params = {
       Key: config.icasework.key,
-      Signature: this.sign(),
+      Signature: crypto.createHash('md5').update(date + config.icasework.secret).digest('hex'),
       Type: config.icasework.type,
       Format: 'json',
       db: config.icasework.db,
@@ -27,17 +18,10 @@ module.exports = class CaseworkModel extends Model {
 
     return Object.assign(params, this.toJSON());
   }
-
-  sign() {
-    const date = (new Date()).toISOString().split('T')[0];
-    return crypto.createHash('md5').update(date + config.icasework.secret).digest('hex');
-  }
-
-  save() {
-    const options = this.requestConfig({});
-    options.form = this.prepare();
-    options.method = 'POST';
-
-    return this.request(options);
+  async save() {
+    const data = await Promise.resolve(this.prepare());
+    const url = `${config.icasework.url}${config.icasework.createpath}?db=${config.icasework.db}`;
+    const response = await axios.post(url, data, { timeout: config.icasework.timeout });
+    return await response;
   }
 };
