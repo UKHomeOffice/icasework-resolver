@@ -5,5 +5,33 @@ ignore:
   SNYK-JS-JSONSCHEMA-1920922:
     - hof > request > http-signature > jsprim > json-schema:
         reason: Need to replace request module in hof
-        expires: '2022-12-18T14:49:41.738Z'
+        expires: '2024-10-18T14:49:41.738Z'
+  SNYK-JS-REQUEST-3361831:
+    - '*':
+        reason: Need to replace request module in hof
+        expires: '2024-10-18T14:49:41.738Z'
+  SNYK-JS-TOUGHCOOKIE-5672873:
+    - '*':
+        reason: Need to replace request module in hof
+        expires: '2024-10-18T14:49:41.738Z'
+  SNYK-JS-AXIOS-6032459:
+      - '*':
+        reason: Need to update notifications-node-client module in hof
+        expires: '2024-10-18T14:49:41.738Z'
+  SNYK-JS-AXIOS-6124857:
+      - '*':
+        reason: Need to update notifications-node-client module in hof
+        expires: '2024-10-18T14:49:41.738Z'
+  SNYK-JS-MARKDOWNIT-6483324:
+      - '*':
+        reason: Need to update markdownit module in hof
+        expires: '2024-10-18T14:49:41.738Z'
+  SNYK-JS-ASYNC-7414156:
+      - '*':
+        reason: No upgrade or patch available
+        expires: '2024-10-18T14:49:41.738Z'
+  SNYK-JS-INFLIGHT-6095116:
+      - '*':
+        reason: No upgrade or patch available
+        expires: '2024-10-18T14:49:41.738Z'
 patch: {}
