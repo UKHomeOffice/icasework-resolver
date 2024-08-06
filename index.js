@@ -13,7 +13,8 @@ const logger = createLogger({
     json()
   ),
   transports: [
-    new transports.Console({level: 'info',
+    new transports.Console({
+      level: 'info',
       handleExceptions: true
     })]
 });
@@ -72,14 +73,16 @@ const resolver = Consumer.create({
         requestType = 'GET';
         const getCaseResponse = await getCase.fetch();
         const isCaseFound = (getCaseResponse.exists ? 'found' : 'not found');
-        logger.info({ externalID, message: 'Casework GET request successful. externalId:' +
-          `${externalID} was ${isCaseFound}`});
+        logger.info({
+          externalID, message: 'Casework GET request successful. externalId:' +
+            `${externalID} was ${isCaseFound}`
+        });
         caseID = getCaseResponse.caseId;
 
         if (!getCaseResponse.exists) {
           requestType = 'CREATECASE';
           const data = await submitCase.save();
-          caseID = data.createcaseresponse.caseid;
+          caseID = data.data.createcaseresponse.caseid;
 
           logger.info({ caseID, externalID, message: 'Casework submission successful' });
 
