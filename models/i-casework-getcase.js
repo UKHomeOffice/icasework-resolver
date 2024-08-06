@@ -40,22 +40,26 @@ module.exports = class DocumentModel extends Model {
       const adjustedResponse = `[${response.data.replace(/\n/g, '').replace(/\r/g, '').replace(/}{/g, '},{')}]`;
       const latestEntry = JSON.parse(adjustedResponse).reverse()[0];
       caseId = latestEntry['CaseDetails.CaseId'];
+    } catch (err) {
+      console.error('Error handling response:', err);
+      throw err;
     } finally {
       return callback(null, { caseId, exists: response.status === 200 });
     }
   }
 
-  fetch() {
-    const params = {
-      url: this.url(),
-      method: 'GET',
-      params: this.prepare()
-    };
-    return this._request(params).then(response => {
+  async fetch() {
+    try {
+      const params = {
+        url: this.url(),
+        method: 'GET',
+        params: this.prepare()
+      };
+      const response = await this._request(params);
       return this.handleResponse(response.data);
-    })
-      .catch(err => {
-        return err;
-      });
+    } catch (err) {
+      console.error('Error fetching data:', err);
+      throw err;
+    }
   }
 };
