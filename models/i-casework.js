@@ -11,7 +11,7 @@ module.exports = class CaseworkModel extends Model {
   }
 
   url() {
-    return `${config.icasework.url}${config.icasework.createpath}?db=${config.icasework.db}`;
+    return `${config.icasework.url}${config.icasework.createpath}?db=${encodeURIComponent(config.icasework.db)}`;
   }
 
   prepare() {
@@ -33,7 +33,8 @@ module.exports = class CaseworkModel extends Model {
   }
 
   async save() {
-    return Promise.resolve(this.prepare()).then(async data => {
+    try {
+      const data = await this.prepare();
       const params = {
         url: this.url(),
         data,
@@ -42,6 +43,9 @@ module.exports = class CaseworkModel extends Model {
       };
       const response = await this._request(params);
       return response;
-    });
+    } catch (error) {
+      console.error('Error saving data:', error);
+      throw error;
+    }
   }
 };
