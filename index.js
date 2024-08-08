@@ -83,7 +83,6 @@ const resolver = Consumer.create({
         if (!getCaseResponse.exists) {
           requestType = 'CREATECASE';
           const data = await submitCase.save();
-          // caseID = data.data.createcaseresponse.caseid;
           const { caseid: caseId } = data?.data?.createcaseresponse || {};
 
           if (!caseId) {
