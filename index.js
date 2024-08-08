@@ -86,7 +86,7 @@ const resolver = Consumer.create({
           // caseID = data.data.createcaseresponse.caseid;
           const { caseid: caseId } = data?.data?.createcaseresponse || {};
 
-          if (!caseID) {
+          if (!caseId) {
             logger.warn({ message: 'Failed to extract Case ID', data });
           }
 
