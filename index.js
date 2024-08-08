@@ -86,6 +86,10 @@ const resolver = Consumer.create({
           // caseID = data.data.createcaseresponse.caseid;
           const { caseid: caseId } = data?.data?.createcaseresponse || {};
 
+          if (!caseID) {
+            logger.warn({ message: 'Failed to extract Case ID', data });
+          }
+
           logger.info({ caseId, externalID, message: 'Casework submission successful' });
 
           await submitAudit('resolver', { success: true, caseId, externalID });
