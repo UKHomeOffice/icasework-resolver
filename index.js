@@ -74,19 +74,21 @@ const resolver = Consumer.create({
         const getCaseResponse = await getCase.fetch();
         const isCaseFound = (getCaseResponse.exists ? 'found' : 'not found');
         logger.info({
-          externalID, message: 'Casework GET request successful. externalId:' +
-            `${externalID} was ${isCaseFound}`
+          message: `Casework GET request successful. External ID: ${externalID} was ${isCaseFound}`,
+          externalID: externalID,
+          status: isCaseFound
         });
         caseID = getCaseResponse.caseId;
 
         if (!getCaseResponse.exists) {
           requestType = 'CREATECASE';
           const data = await submitCase.save();
-          caseID = data.data.createcaseresponse.caseid;
+          // caseID = data.data.createcaseresponse.caseid;
+          const { caseid: caseId } = data?.data?.createcaseresponse || {};
 
-          logger.info({ caseID, externalID, message: 'Casework submission successful' });
+          logger.info({ caseId, externalID, message: 'Casework submission successful' });
 
-          await submitAudit('resolver', { success: true, caseID, externalID });
+          await submitAudit('resolver', { success: true, caseId, externalID });
           return resolve();
         }
 
