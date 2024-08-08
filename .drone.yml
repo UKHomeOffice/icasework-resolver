@@ -14,7 +14,7 @@ trigger:
 steps:
   - name: setup
     pull: if-not-exists
-    image: node:18
+    image: node:20
     commands:
       - yarn install --frozen-lockfile
     when:
@@ -23,7 +23,7 @@ steps:
       
   - name: linting
     pull: if-not-exists
-    image: node:18
+    image: node:20
     commands:
       - yarn run test:lint
     when:
@@ -58,7 +58,7 @@ steps:
 
   - name: snyk_scan
     pull: if-not-exists
-    image: node:18
+    image: node:20
     environment:
       SNYK_TOKEN:
         from_secret: snyk_token
@@ -83,7 +83,7 @@ steps:
 
   - name: cron_snyk_scan
     pull: if-not-exists
-    image: node:18
+    image: node:20
     environment:
       SNYK_TOKEN:
         from_secret: snyk_token
