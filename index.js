@@ -63,8 +63,8 @@ const resolver = Consumer.create({
   queueUrl: config.aws.sqs,
   handleMessage: async message => {
     return new Promise(async (resolve, reject) => {
-      const getCase = new GetCase(JSON.parse(message.Body));
-      const submitCase = new SubmitCase(JSON.parse(message.Body));
+      const getCase = new GetCase(JSON.parse(message.data));
+      const submitCase = new SubmitCase(JSON.parse(message.data));
       const externalID = submitCase.get('ExternalId');
       let caseID;
       let requestType = 'N/A';
@@ -72,6 +72,7 @@ const resolver = Consumer.create({
       try {
         requestType = 'GET';
         const getCaseResponse = await getCase.fetch();
+        console.log('*************** case response ', getCaseResponse);
         const isCaseFound = (getCaseResponse.exists ? 'found' : 'not found');
         logger.info({
           message: `Casework GET request successful. External ID: ${externalID} was ${isCaseFound}`
@@ -83,8 +84,9 @@ const resolver = Consumer.create({
         if (!getCaseResponse.exists) {
           requestType = 'CREATECASE';
           const data = await submitCase.save();
-          // const { caseid: caseId } = data?.data?.createcaseresponse || {};s
-          const caseId = data.data.createcaseresponse.caseid;
+          console.log('**************** create case data ', data);
+          // const { caseid: caseId } = data?.data?.createcaseresponse || {};
+          const caseId = data.createcaseresponse.caseid;
 
           if (!caseId) {
             logger.warn({ message: 'Failed to extract Case ID', data });

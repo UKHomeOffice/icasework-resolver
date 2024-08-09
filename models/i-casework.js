@@ -42,6 +42,7 @@ module.exports = class CaseworkModel extends Model {
         method: 'POST'
       };
       const response = await this._request(params);
+      console.log('******************* THIS IS THE RESPONSE: ', response);
       return response;
     } catch (error) {
       console.error('Error saving data:', error);
