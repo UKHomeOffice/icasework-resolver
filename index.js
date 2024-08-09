@@ -74,9 +74,9 @@ const resolver = Consumer.create({
         const getCaseResponse = await getCase.fetch();
         const isCaseFound = (getCaseResponse.exists ? 'found' : 'not found');
         logger.info({
-          message: `Casework GET request successful. External ID: ${externalID} was ${isCaseFound}`,
-          externalID: externalID,
-          status: isCaseFound
+          message: `Casework GET request successful. External ID: ${externalID} was ${isCaseFound}`
+          // externalID: externalID,
+          // status: isCaseFound
         });
         caseID = getCaseResponse.caseId;
 
@@ -84,6 +84,7 @@ const resolver = Consumer.create({
           requestType = 'CREATECASE';
           const data = await submitCase.save();
           const { caseid: caseId } = data?.data?.createcaseresponse || {};
+          const caseId = data.data.createcaseresponse;
 
           if (!caseId) {
             logger.warn({ message: 'Failed to extract Case ID', data });
