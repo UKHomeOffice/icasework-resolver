@@ -67,7 +67,7 @@ const resolver = Consumer.create({
       console.log('********************** parsed message ', JSON.parse(message));
       const getCase = new GetCase(JSON.parse(message.Body));
       const submitCase = new SubmitCase(JSON.parse(message.Body));
-      const externalID = submitCase.get('ExternalId');s
+      const externalID = submitCase.get('ExternalId');
       let caseID;
       let requestType = 'N/A';
 
