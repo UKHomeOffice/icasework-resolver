@@ -63,9 +63,11 @@ const resolver = Consumer.create({
   queueUrl: config.aws.sqs,
   handleMessage: async message => {
     return new Promise(async (resolve, reject) => {
-      const getCase = new GetCase(JSON.parse(message.data));
-      const submitCase = new SubmitCase(JSON.parse(message.data));
-      const externalID = submitCase.get('ExternalId');
+      console.log('********************** message ', message)
+      console.log('********************** parsed message ', JSON.parse(message))
+      const getCase = new GetCase(JSON.parse(message.Body));
+      const submitCase = new SubmitCase(JSON.parse(message.Body));
+      const externalID = submitCase.get('ExternalId');s
       let caseID;
       let requestType = 'N/A';
 
