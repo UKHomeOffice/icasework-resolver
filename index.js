@@ -96,8 +96,7 @@ const resolver = Consumer.create({
         await submitAudit('duplicates', { caseID, externalID });
         await submitAudit('resolver', { success: true, caseID, externalID });
         return resolve();
-      }
-      catch (e) {
+      } catch (e) {
         return handleError(caseID, externalID, requestType, reject, e);
       }
     });
