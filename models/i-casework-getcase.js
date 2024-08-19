@@ -12,7 +12,7 @@ module.exports = class DocumentModel extends Model {
 
   url() {
     // we are just building up the url with the path
-    return config.icasework.url + config.icasework.getcasepath;
+    return `${config.icasework.url}${config.icasework.getcasepath}`;
   }
 
   sign() {
@@ -22,11 +22,11 @@ module.exports = class DocumentModel extends Model {
 
   prepare() {
     const params = {
+      db: config.icasework.db,
       Key: config.icasework.key,
       Signature: this.sign(),
       ExternalId: this.get('ExternalId'),
-      Format: 'json',
-      db: config.icasework.db
+      Format: 'json'
     };
     return params;
   }
@@ -40,6 +40,7 @@ module.exports = class DocumentModel extends Model {
       const adjustedResponse = `[${response.data.replace(/\n/g, '').replace(/\r/g, '').replace(/}{/g, '},{')}]`;
       const latestEntry = JSON.parse(adjustedResponse).reverse()[0];
       caseId = latestEntry['CaseDetails.CaseId'];
+      console.log('******************* THIS IS THE ADJUSTED RESPONSE: ', adjustedResponse);
     } catch (err) {
       console.error('Error handling response:', err);
       throw err;
@@ -50,13 +51,22 @@ module.exports = class DocumentModel extends Model {
 
   async fetch() {
     try {
-      const params = {
-        url: this.url(),
-        method: 'GET',
-        params: this.prepare()
-      };
-      const response = await this._request(params);
-      return this.handleResponse(response.data);
+      const options = this.requestConfig({});
+      options.url = this.url();
+      options.params = this.prepare();
+      options.method = 'GET';
+      // const params = {
+      //   url: this.url(),
+      //   method: 'GET',
+      //   params: this.prepare()
+      // };
+      console.log('******************* THIS IS BEFORE THE FETCH RESPONSE: ', options);
+      console.log('******************* THIS IS THE FETCH RESPONSE: ', await this.request(options));
+      console.log('******************* THIS IS THE private FETCH RESPONSE: ', await this._request(options));
+      const response = await this._request(options);
+      console.log('******************* THIS IS HANDLING RESPONSE: ', this.handleResponse(response));
+      return await this._request(options);
+      // return this.handleResponse(response.data);
     } catch (err) {
       console.error('Error fetching data:', err);
       throw err;

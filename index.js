@@ -63,18 +63,18 @@ const resolver = Consumer.create({
   queueUrl: config.aws.sqs,
   handleMessage: async message => {
     return new Promise(async (resolve, reject) => {
-      console.log('********************** message ', message);
-      console.log('********************** parsed message ', JSON.parse(message));
       const getCase = new GetCase(JSON.parse(message.Body));
       const submitCase = new SubmitCase(JSON.parse(message.Body));
       const externalID = submitCase.get('ExternalId');
       let caseID;
       let requestType = 'N/A';
 
+      console.log('*************** get case fetch ', await getCase.fetch(), '*************** end of get case fetch');
+
       try {
         requestType = 'GET';
         const getCaseResponse = await getCase.fetch();
-        console.log('*************** case response ', getCaseResponse);
+        console.log('*************** case response ', getCaseResponse, '*************** end of case response ');
         const isCaseFound = (getCaseResponse.exists ? 'found' : 'not found');
         logger.info({
           message: `Casework GET request successful. External ID: ${externalID} was ${isCaseFound}`
@@ -86,9 +86,9 @@ const resolver = Consumer.create({
         if (!getCaseResponse.exists) {
           requestType = 'CREATECASE';
           const data = await submitCase.save();
-          console.log('**************** create case data ', data);
+          console.log('**************** create case data ', data, '**************** end of create case data');
           // const { caseid: caseId } = data?.data?.createcaseresponse || {};
-          const caseId = data.createcaseresponse.caseid;
+          const caseId = data.data.createcaseresponse.caseid;
 
           if (!caseId) {
             logger.warn({ message: 'Failed to extract Case ID', data });
@@ -106,7 +106,7 @@ const resolver = Consumer.create({
         await submitAudit('resolver', { success: true, caseID, externalID });
         return resolve();
       } catch (e) {
-        return handleError(caseID, externalID, requestType, reject, e);
+        return handleError(caseID, externalID, requestType, reject, e.message);
       }
     });
   }
