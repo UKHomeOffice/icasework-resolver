@@ -50,7 +50,7 @@ module.exports = class DocumentModel extends Model {
     const options = this.requestConfig({});
     options.qs = this.prepare();
     options.method = 'GET';
-
+    console.log('******************* THIS IS BEFORE THE FETCH RESPONSE: ', this.request(options));
     return this.request(options);
   }
 };
