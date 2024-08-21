@@ -65,13 +65,13 @@ module.exports = class DocumentModel extends Model {
         console.error('with params error: ', error);
         throw error;
       });
-    await axios(this.url())
+    await axios(this.url(), { params })
       .then(response => {
-        console.log('response with just url: ', response);
+        console.log('response with  url and params: ', response);
       })
       .catch(error => {
         // eslint-disable-next-line no-console
-        console.error('just url error: ', error);
+        console.error(' url  and params error: ', error);
         throw error;
       });
     // try {
