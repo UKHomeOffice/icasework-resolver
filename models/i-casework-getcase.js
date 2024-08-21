@@ -46,11 +46,13 @@ module.exports = class DocumentModel extends Model {
     }
   }
 
-  fetch() {
+  async fetch() {
     const options = this.requestConfig({});
     options.qs = this.prepare();
     options.method = 'GET';
-    console.log('******************* THIS IS BEFORE THE FETCH RESPONSE: ', this.request(options));
+    console.log('******************* THIS IS BEFORE THE FETCH RESPONSE: ', await this.request(options));
+    const response =  await this.request(options);
+    console.log('******************* THIS IS AFTER THE FETCH RESPONSE: ', response)
     return this.request(options);
   }
 };
