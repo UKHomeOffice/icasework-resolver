@@ -3,6 +3,7 @@
 const Model = require('hof').model;
 const crypto = require('crypto');
 const config = require('../config');
+const axios = require('axios');
 
 module.exports = class DocumentModel extends Model {
   constructor(attributes, options) {
@@ -12,7 +13,7 @@ module.exports = class DocumentModel extends Model {
 
   url() {
     // we are just building up the url with the path
-    return `${config.icasework.url}${config.icasework.getcasepath}`;
+    return `${config.icasework.url}${config.icasework.getcasepath}?db=${config.icasework.db}`;
   }
 
   sign() {
@@ -22,7 +23,7 @@ module.exports = class DocumentModel extends Model {
 
   prepare() {
     const params = {
-      db: config.icasework.db,
+      // db: config.icasework.db,
       Key: config.icasework.key,
       Signature: this.sign(),
       ExternalId: this.get('ExternalId'),
@@ -50,26 +51,49 @@ module.exports = class DocumentModel extends Model {
   }
 
   async fetch() {
-    try {
-      const options = this.requestConfig({});
-      options.url = this.url();
-      options.params = this.prepare();
-      options.method = 'GET';
-      // const params = {
-      //   url: this.url(),
-      //   method: 'GET',
-      //   params: this.prepare()
-      // };
-      console.log('******************* THIS IS BEFORE THE FETCH RESPONSE: ', options);
-      console.log('******************* THIS IS THE FETCH RESPONSE: ', await this.request(options));
-      console.log('******************* THIS IS THE private FETCH RESPONSE: ', await this._request(options));
-      const response = await this._request(options);
-      console.log('******************* THIS IS HANDLING RESPONSE: ', this.handleResponse(response));
-      return await this._request(options);
-      // return this.handleResponse(response.data);
-    } catch (err) {
-      console.error('Error fetching data:', err);
-      throw err;
-    }
+    const params = {
+      url: this.url(),
+      method: 'get',
+      params: this.prepare()
+    };
+    await axios(params)
+      .then(response => {
+        console.log('response with params: ', response);
+      })
+      .catch(error => {
+        // eslint-disable-next-line no-console
+        console.error('with params error: ', error);
+        throw error;
+      });
+    await axios(this.url())
+      .then(response => {
+        console.log('response with just url: ', response);
+      })
+      .catch(error => {
+        // eslint-disable-next-line no-console
+        console.error('just url error: ', error);
+        throw error;
+      });
+    // try {
+    //   const options = this.requestConfig({});
+    //   options.url = this.url();
+    //   options.params = this.prepare();
+    //   options.method = 'GET';
+    //   // const params = {
+    //   //   url: this.url(),
+    //   //   method: 'GET',
+    //   //   params: this.prepare()
+    //   // };
+    //   console.log('******************* THIS IS BEFORE THE FETCH RESPONSE: ', options);
+    //   console.log('******************* THIS IS THE FETCH RESPONSE: ', await this.request(options));
+    //   console.log('******************* THIS IS THE private FETCH RESPONSE: ', await this._request(options));
+    //   const response = await this._request(options);
+    //   console.log('******************* THIS IS HANDLING RESPONSE: ', this.handleResponse(response));
+    //   return await this._request(options);
+    //   // return this.handleResponse(response.data);
+    // } catch (err) {
+    //   console.error('Error fetching data:', err);
+    //   throw err;
+    // }
   }
 };
