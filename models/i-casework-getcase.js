@@ -15,7 +15,7 @@ module.exports = class DocumentModel extends Model {
 
   url() {
     // we are just building up the url with the path
-    return `${config.icasework.url}${config.icasework.getcasepath}`;
+    return `${config.icasework.url}?db=${config.icasework.db}${config.icasework.getcasepath}`;
   }
 
   sign() {
@@ -35,10 +35,17 @@ module.exports = class DocumentModel extends Model {
   // }
 
   prepare() {
+      const params = {
+      db: config.icasework.db,
+      Key: config.icasework.key,
+      Signature: this.sign(),
+      ExternalId: this.get('ExternalId'),
+      Format: 'json'
+    };
     const props = super.prepare();
     props.ExternalId = this.get('ExternalId');
     console.log(props);
-    return props;
+    return params;
   }
 
   handleResponse(response, callback) {
