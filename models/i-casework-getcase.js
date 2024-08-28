@@ -35,7 +35,7 @@ module.exports = class DocumentModel extends Model {
   // }
 
   prepare() {
-      const params = {
+    const params = {
       db: config.icasework.db,
       Key: config.icasework.key,
       Signature: this.sign(),
