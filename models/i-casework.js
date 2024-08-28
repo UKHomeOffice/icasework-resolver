@@ -1,6 +1,6 @@
 'use strict';
 
-const { model: Model }= require('hof');
+const { model: Model } = require('hof');
 const crypto = require('crypto');
 const config = require('../config');
 
