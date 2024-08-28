@@ -1,14 +1,14 @@
 'use strict';
 
-const Model = require('hof').model;
+const { model: Model }= require('hof');
 const crypto = require('crypto');
 const config = require('../config');
 
 module.exports = class CaseworkModel extends Model {
-  constructor(attributes, options) {
-    super(attributes, options);
-    this.options.timeout = this.options.timeout || config.icasework.timeout;
-  }
+  // constructor(attributes, options) {
+  //   super(attributes, options);
+  //   this.options.timeout = this.options.timeout || config.icasework.timeout;
+  // }
 
   url() {
     return `${config.icasework.url}${config.icasework.createpath}?db=${encodeURIComponent(config.icasework.db)}`;
@@ -23,8 +23,8 @@ module.exports = class CaseworkModel extends Model {
       db: config.icasework.db,
       RequestMethod: 'Online form'
     };
-
-    return Object.assign(params, this.toJSON());
+    return params;
+    // return Object.assign(params, this.toJSON());
   }
 
   sign() {

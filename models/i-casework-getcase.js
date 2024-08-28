@@ -8,14 +8,14 @@ const logger = require('hof/lib/logger')({ env: config.env });
 // const axios = require('axios');
 
 module.exports = class DocumentModel extends Model {
-  constructor(attributes, options) {
-    super(attributes, options);
-    this.options.timeout = this.options.timeout || config.icasework.fetchTimeout;
-  }
+  // constructor(attributes, options) {
+  //   super(attributes, options);
+  //   this.options.timeout = this.options.timeout || config.icasework.fetchTimeout;
+  // }
 
   url() {
     // we are just building up the url with the path
-    return `${config.icasework.url}?db=${config.icasework.db}${config.icasework.getcasepath}`;
+    return `${config.icasework.url}${config.icasework.getcasepath}`;
   }
 
   sign() {
@@ -112,7 +112,7 @@ module.exports = class DocumentModel extends Model {
       params: this.prepare()
     };
     return this._request(params).then(response => {
-      return console.log(response);
+      console.log(response);
     })
       .catch(err => {
         logger.error(`Error fetching data from ${params.url}: ${err.message}`);
