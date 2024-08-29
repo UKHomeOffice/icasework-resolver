@@ -190,6 +190,6 @@ module.exports = class DocumentModel extends Model {
     } catch (err) {
       logger.error(`Error fetching data from ${this.url()}: ${err.message}`);
       throw new Error(`Failed to fetch data: ${err.message || 'Unknown error'}`);
-    };
+    }
   }
 };
