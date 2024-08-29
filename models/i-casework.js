@@ -23,8 +23,8 @@ module.exports = class CaseworkModel extends Model {
       db: config.icasework.db,
       RequestMethod: 'Online form'
     };
-    // return params;
-    return Object.assign(params, this.toJSON());
+    return params;
+    // return Object.assign(params, this.toJSON());
   }
 
   sign() {
