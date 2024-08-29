@@ -147,7 +147,7 @@ module.exports = class DocumentModel extends Model {
       Format: 'json',
       db: config.icasework.db,
       RequestMethod: 'Online form',
-      CaseId: this.get('ExternalId'),
+      CaseId: this.get('ExternalId')
     };
     console.log('THIS IS PROPS ', props);
     return props;
@@ -187,9 +187,8 @@ module.exports = class DocumentModel extends Model {
       // return await this._request(params).then(response => {
       // return this.parse(response.data);
       // })
-    }
-    catch (err) {
-      logger.error(`Error fetching data from ${params.url}: ${err.message}`);
+    } catch (err) {
+      logger.error(`Error fetching data from ${this.url()}: ${err.message}`);
       throw new Error(`Failed to fetch data: ${err.message || 'Unknown error'}`);
     };
   }
