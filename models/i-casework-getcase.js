@@ -15,7 +15,7 @@ module.exports = class DocumentModel extends Model {
 
   url() {
     // we are just building up the url with the path
-    return `${config.icasework.url}${config.icasework.getcasepath}`;
+    return `${config.icasework.url}${config.icasework.getcasepath}?db=${encodeURIComponent(config.icasework.db)}`;
   }
 
   sign() {
