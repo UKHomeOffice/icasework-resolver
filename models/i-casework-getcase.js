@@ -44,7 +44,7 @@ module.exports = class DocumentModel extends Model {
     };
     const props = super.prepare();
     props.ExternalId = this.get('ExternalId');
-    console.log(props);
+    console.log('HELLO PROPS: ', props);
     return params;
   }
 
@@ -112,7 +112,7 @@ module.exports = class DocumentModel extends Model {
       params: this.prepare()
     };
     return this._request(params).then(response => {
-      console.log(response);
+      console.log('This is the response ', response);
     })
       .catch(err => {
         logger.error(`Error fetching data from ${params.url}: ${err.message}`);
