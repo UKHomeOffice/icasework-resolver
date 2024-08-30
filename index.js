@@ -63,7 +63,8 @@ const resolver = Consumer.create({
   queueUrl: config.aws.sqs,
   handleMessage: async message => {
     return new Promise(async (resolve, reject) => {
-      // console.log('*************** getting case fetch***************');
+      console.log('*************** Message Body', message.Body, '***************');
+      console.log('*************** Parsed Message Body', JSON.parse(message.Body), '***************');
       const getCase = new GetCase(JSON.parse(message.Body));
       console.log('******************************  get case  ', getCase);
       console.log('******************************  get case  ', getCase.url());
