@@ -147,7 +147,7 @@ module.exports = class DocumentModel extends Model {
       Format: 'json',
       db: config.icasework.db,
       RequestMethod: 'Online form',
-      CaseId: this.get('ExternalId')
+      ExternalId: this.get('ExternalId')
     };
     console.log('THIS IS PROPS ', props);
     return props;
