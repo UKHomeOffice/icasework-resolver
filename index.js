@@ -64,8 +64,8 @@ const resolver = Consumer.create({
   handleMessage: async message => {
     return new Promise(async (resolve, reject) => {
       // console.log('*************** getting case fetch***************');
-      const getCase = new GetCase(JSON.parse(message.Body));
-      console.log('******************************  get case  ', getCase);
+      // const getCase = new GetCase(JSON.parse(message.Body));
+      // console.log('******************************  get case  ', getCase);
       // console.log('****************************** end of get case fetch');
       const submitCase = new SubmitCase(JSON.parse(message.Body));
       console.log('*************** submit case', submitCase, '*************** end of submit case');
@@ -73,7 +73,7 @@ const resolver = Consumer.create({
       let caseID;
       let requestType = 'N/A';
 
-      console.log('*************** get case fetch ', await getCase.fetch(), '*************** end of get case fetch');
+      // console.log('*************** get case fetch ', await getCase.fetch(), '*************** end of get case fetch');
 
       try {
         requestType = 'GET';
