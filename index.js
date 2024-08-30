@@ -70,9 +70,7 @@ const resolver = Consumer.create({
       console.log('******************************  get case  ', getCase.url());
       console.log('******************************  get case  ', getCase.prepare());
       console.log('******************************  get case  ', getCase.sign());
-      // console.log('****************************** end of get case fetch');
       const submitCase = new SubmitCase(JSON.parse(message.Body));
-      console.log('*************** submit case', submitCase.save(), '*************** end of submit case');
       const externalID = submitCase.get('ExternalId');
       let caseID;
       let requestType = 'N/A';
