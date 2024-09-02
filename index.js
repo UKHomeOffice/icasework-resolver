@@ -99,7 +99,7 @@ const resolver = Consumer.create({
         return handleError(caseID, externalID, requestType, reject, err);
       }
       return resolve();
-      // } 
+      // }
     });
   }
 });
