@@ -3,7 +3,7 @@
 const Model = require('hof').model;
 const crypto = require('crypto');
 const config = require('../config');
-const axios = requore('axios');
+const axios = require('axios');
 
 module.exports = class DocumentModel extends Model {
   constructor(attributes, options) {
@@ -48,11 +48,11 @@ module.exports = class DocumentModel extends Model {
   }
 
   async fetch() {
-    const getResponse = axios.get(this.url());
+    const getResponse = await axios.get(this.url());
     console.log('************************Simple get with axios ', getResponse);
 
-    const fetchResponse = axios.get(this.url(), this.prepare());
-    console.log('************************Fetchong with axios ', fetchResponse);
+    const fetchResponse = await axios.get(this.url(), this.prepare());
+    console.log('************************Fetching with axios ', fetchResponse);
 
 
     const options = this.requestConfig({});
