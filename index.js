@@ -61,7 +61,7 @@ const handleError = async (caseID, externalID, requestType, reject, err) => {
 
 const resolver = Consumer.create({
   queueUrl: config.aws.sqs,
-  handleMessage: async message => {
+  handleMessage: async (message, err) => {
     return new Promise(async (resolve, reject) => {
       const getCase = new GetCase(JSON.parse(message.Body));
       const submitCase = new SubmitCase(JSON.parse(message.Body));
@@ -95,10 +95,11 @@ const resolver = Consumer.create({
 
       await submitAudit('duplicates', { caseID, externalID });
       await submitAudit('resolver', { success: true, caseID, externalID });
+      if (err) {
+        return handleError(caseID, externalID, requestType, reject, err);
+      }
       return resolve();
-      // } catch (e) {
-      //   return handleError(caseID, externalID, requestType, reject, e);
-      // }
+      // } 
     });
   }
 });
