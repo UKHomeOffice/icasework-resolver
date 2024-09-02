@@ -48,13 +48,6 @@ module.exports = class DocumentModel extends Model {
   }
 
   async fetch() {
-    const getResponse = await axios.get(this.url());
-    console.log('************************Simple get with axios ', getResponse);
-
-    const fetchResponse = await axios.get(this.url(), this.prepare());
-    console.log('************************Fetching with axios ', fetchResponse);
-
-
     const options = this.requestConfig({});
     options.qs = this.prepare();
     options.method = 'GET';
@@ -62,6 +55,12 @@ module.exports = class DocumentModel extends Model {
     console.log('******************* THIS IS BEFORE THE CONTROL FETCH RESPONSE: ', await this.request(options));
     const response =  await this.request(options);
     console.log('******************* THIS IS AFTER THE CONTROL FETCH RESPONSE: ', response);
+    const getResponse = await axios.get(this.url());
+    console.log('************************Simple get with axios ', getResponse);
+
+    const fetchResponse = await axios.get(this.url(), this.prepare());
+    console.log('************************Fetching with axios ', fetchResponse);
+
     return this.request(options);
   }
 };
