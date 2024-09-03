@@ -51,6 +51,7 @@ module.exports = class DocumentModel extends Model {
     const options = this.requestConfig({});
     options.qs = this.prepare();
     options.method = 'GET';
+    options.params = this.prepare();
     console.log('Options ', options);
     const response = await this.request(options);
     console.log('******************* THIS IS AFTER THE CONTROL FETCH RESPONSE: ', response);
