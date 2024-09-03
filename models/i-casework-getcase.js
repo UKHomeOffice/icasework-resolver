@@ -55,10 +55,10 @@ module.exports = class DocumentModel extends Model {
     console.log('******************* THIS IS BEFORE THE CONTROL FETCH RESPONSE: ', await this.request(options));
     const response =  await this.request(options);
     console.log('******************* THIS IS AFTER THE CONTROL FETCH RESPONSE: ', response);
-    console.log('************************Simple get with axios ', getResponse);
+    console.log('************************Simple get with axios ', await axios.get(this.url()));
     const getResponse = await axios.get(this.url());
-    console.log('************************Simple get with axios 2 ', await axios.get(this.url()));
-
+    console.log('************************Simple get with axios 2 ', getResponse);
+    console.log('************************Fetching with axios ', await axios.get(this.url(), this.prepare()));
     const fetchResponse = await axios.get(this.url(), this.prepare());
     console.log('************************Fetching with axios ', fetchResponse);
 
