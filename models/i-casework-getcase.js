@@ -56,6 +56,7 @@ module.exports = class DocumentModel extends Model {
     console.log('******************* THIS IS AFTER THE CONTROL FETCH RESPONSE: ', response);
     console.log('HELLLLLLLOOOOOOOOOO');
     // console.log('************************Fetching with axios ', await axios.get(this.url(), options));
+    console.log('************PREPARING ', this.prepare());
     console.log('************************Fetching with axios 2 ', await axios.get(this.url(), this.prepare()));
     const fetchResponse = await axios.get(this.url(), this.prepare());
     console.log('************************Fetching with axios ', fetchResponse);
