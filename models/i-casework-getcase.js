@@ -51,6 +51,7 @@ module.exports = class DocumentModel extends Model {
     const options = this.requestConfig({});
     options.qs = this.prepare();
     options.method = 'GET';
+    options.url = this.url();
     options.params = this.prepare();
     console.log('Options ', options);
     const response = await this.request(options);
@@ -58,7 +59,7 @@ module.exports = class DocumentModel extends Model {
     console.log('HELLLLLLLOOOOOOOOOO');
     // console.log('************************Fetching with axios ', await axios.get(this.url(), options));
     console.log('************PREPARING ', this.prepare());
-    console.log('************************Fetching with axios 2 ', await axios.get(this.url(), this.prepare()));
+    console.log('************************Fetching with axios 2 ', await axios(options));
     const fetchResponse = await axios.get(this.url(), this.prepare());
     console.log('************************Fetching with axios ', fetchResponse);
 
