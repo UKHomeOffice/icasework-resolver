@@ -47,7 +47,7 @@ module.exports = class DocumentModel extends Model {
     }
   }
 
-  // FIREARMS code 
+  // FIREARMS code
   fetch() {
     const params = {
       url: this.url(),
@@ -55,11 +55,11 @@ module.exports = class DocumentModel extends Model {
       params: this.prepare()
     };
     return axios(params).then(response => {
-      console.log(repsonse);
+      console.log(response);
       return this.parse(response.data);
     })
       .catch(err => {
-        logger.error(`Error fetching data from ${params.url}: ${err.message}`);
+        console.error(`Error fetching data from ${params.url}: ${err.message}`);
         throw new Error(`Failed to fetch data: ${err.message || 'Unknown error'}`);
       });
   }
