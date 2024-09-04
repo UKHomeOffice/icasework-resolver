@@ -47,6 +47,23 @@ module.exports = class DocumentModel extends Model {
     }
   }
 
+  // FIREARMS code 
+  fetch() {
+    const params = {
+      url: this.url(),
+      method: 'GET',
+      params: this.prepare()
+    };
+    return this._request(params).then(response => {
+      console.log(repsonse);
+      return this.parse(response.data);
+    })
+      .catch(err => {
+        logger.error(`Error fetching data from ${params.url}: ${err.message}`);
+        throw new Error(`Failed to fetch data: ${err.message || 'Unknown error'}`);
+      });
+  }
+
   async fetch() {
     const options = this.requestConfig({});
     options.qs = this.prepare();
