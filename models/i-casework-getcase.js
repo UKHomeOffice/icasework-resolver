@@ -47,6 +47,29 @@ module.exports = class DocumentModel extends Model {
     }
   }
 
+  parse(data) {
+    return {
+      caseId: data['CaseDetails.CaseId'],
+    };
+  }
+
+  // async fetch() {
+  //   try {
+  //     const params = {
+  //       url: this.url(),
+  //       method: 'GET',
+  //       params: this.prepare()
+  //     };
+  //     const response = await this._request(params);
+  //     console.log('This is the response ', response);
+  //     return this.parse(response.data);
+  //   }
+  //   catch (err) {
+  //     logger.error(`Error fetching data from ${this.url()}: ${err.message}`);
+  //     throw new Error(`Failed to fetch data: ${err.message || 'Unknown error'}`);
+  //   };
+  // }
+
   async fetch() {
     const options = this.requestConfig({});
     options.qs = this.prepare();
@@ -57,11 +80,10 @@ module.exports = class DocumentModel extends Model {
     const response = await this.request(options);
     console.log('******************* THIS IS AFTER THE CONTROL FETCH RESPONSE: ', response);
     console.log('HELLLLLLLOOOOOOOOOO');
-    // console.log('************************Fetching with axios ', await axios.get(this.url(), options));
     console.log('************PREPARING ', this.prepare());
-    console.log('************************Fetching with axios 2 ', await axios(options));
+    console.log('************************Fetching with axios ', await axios(options));
     const fetchResponse = await axios.get(this.url(), this.prepare());
-    console.log('************************Fetching with axios ', fetchResponse);
+    console.log('************************Fetching with axios 2 ', fetchResponse);
 
     return this.request(options);
   }
