@@ -54,7 +54,7 @@ module.exports = class DocumentModel extends Model {
       method: 'GET',
       params: this.prepare()
     };
-    return this._request(params).then(response => {
+    return axios(params).then(response => {
       console.log(repsonse);
       return this.parse(response.data);
     })
