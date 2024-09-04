@@ -64,22 +64,22 @@ module.exports = class DocumentModel extends Model {
       });
   }
 
-  async fetch() {
-    const options = this.requestConfig({});
-    options.qs = this.prepare();
-    options.method = 'GET';
-    // options.url = this.url();
-    options.params = this.prepare();
-    console.log('Options ', options);
-    const response = await this.request(options);
-    console.log('******************* THIS IS AFTER THE CONTROL FETCH RESPONSE: ', response);
-    console.log('HELLLLLLLOOOOOOOOOO');
-    console.log('************************Fetching with axios ', await axios.get(this.url(), options));
-    console.log('************PREPARING ', this.prepare());
-    console.log('************************Fetching with axios 2 ', await axios(options));
-    const fetchResponse = await axios.get(this.url(), this.prepare());
-    console.log('************************Fetching with axios ', fetchResponse);
+  // async fetch() {
+  //   const options = this.requestConfig({});
+  //   options.qs = this.prepare();
+  //   options.method = 'GET';
+  //   // options.url = this.url();
+  //   options.params = this.prepare();
+  //   console.log('Options ', options);
+  //   const response = await this.request(options);
+  //   console.log('******************* THIS IS AFTER THE CONTROL FETCH RESPONSE: ', response);
+  //   console.log('HELLLLLLLOOOOOOOOOO');
+  //   console.log('************************Fetching with axios ', await axios.get(this.url(), options));
+  //   console.log('************PREPARING ', this.prepare());
+  //   console.log('************************Fetching with axios 2 ', await axios(options));
+  //   const fetchResponse = await axios.get(this.url(), this.prepare());
+  //   console.log('************************Fetching with axios ', fetchResponse);
 
-    return this.request(options);
-  }
+  //   return this.request(options);
+  // }
 };
