@@ -49,7 +49,7 @@ module.exports = class DocumentModel extends Model {
 
   parse(data) {
     return {
-      caseId: data['CaseDetails.CaseId'],
+      caseId: data['CaseDetails.CaseId']
     };
   }
 
