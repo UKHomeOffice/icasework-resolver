@@ -72,7 +72,7 @@ module.exports = class DocumentModel extends Model {
     const response = await this.request(options);
     console.log('******************* THIS IS AFTER THE CONTROL FETCH RESPONSE: ', response);
 
-    //axios code
+    // axios code
     const params = {
       url: this.url(),
       method: 'GET',
@@ -83,7 +83,7 @@ module.exports = class DocumentModel extends Model {
     console.log('************************Fetching with axios 2 ', await axios(params));
     const fetchResponse = await axios.get(this.url(), this.prepare());
     console.log('************************Fetching with axios ', fetchResponse);
-  // end of axios code
+    // end of axios code
 
     return this.request(options);
   }
