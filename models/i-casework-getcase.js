@@ -48,38 +48,43 @@ module.exports = class DocumentModel extends Model {
   }
 
   // FIREARMS code
-  fetch() {
+  // fetch() {
+  //   const params = {
+  //     url: this.url(),
+  //     method: 'GET',
+  //     params: this.prepare()
+  //   };
+  //   return axios(params).then(response => {
+  //     console.log(response);
+  //     return this.parse(response.data);
+  //   })
+  //     .catch(err => {
+  //       console.error(`Error fetching data from ${params.url}: ${err.message}`);
+  //       throw new Error(`Failed to fetch data: ${err.message || 'Unknown error'}`);
+  //     });
+  // }
+
+  async fetch() {
+    const options = this.requestConfig({});
+    options.qs = this.prepare();
+    options.method = 'GET';
+    console.log('Options ', options);
+    const response = await this.request(options);
+    console.log('******************* THIS IS AFTER THE CONTROL FETCH RESPONSE: ', response);
+
+    //axios code
     const params = {
       url: this.url(),
       method: 'GET',
       params: this.prepare()
     };
-    return axios(params).then(response => {
-      console.log(response);
-      return this.parse(response.data);
-    })
-      .catch(err => {
-        console.error(`Error fetching data from ${params.url}: ${err.message}`);
-        throw new Error(`Failed to fetch data: ${err.message || 'Unknown error'}`);
-      });
+    console.log('HELLLLLLLOOOOOOOOOO');
+    console.log('************PREPARING ', this.prepare());
+    console.log('************************Fetching with axios 2 ', await axios(params));
+    const fetchResponse = await axios.get(this.url(), this.prepare());
+    console.log('************************Fetching with axios ', fetchResponse);
+  // end of axios code
+
+    return this.request(options);
   }
-
-  // async fetch() {
-  //   const options = this.requestConfig({});
-  //   options.qs = this.prepare();
-  //   options.method = 'GET';
-  //   // options.url = this.url();
-  //   options.params = this.prepare();
-  //   console.log('Options ', options);
-  //   const response = await this.request(options);
-  //   console.log('******************* THIS IS AFTER THE CONTROL FETCH RESPONSE: ', response);
-  //   console.log('HELLLLLLLOOOOOOOOOO');
-  //   console.log('************************Fetching with axios ', await axios.get(this.url(), options));
-  //   console.log('************PREPARING ', this.prepare());
-  //   console.log('************************Fetching with axios 2 ', await axios(options));
-  //   const fetchResponse = await axios.get(this.url(), this.prepare());
-  //   console.log('************************Fetching with axios ', fetchResponse);
-
-  //   return this.request(options);
-  // }
 };
