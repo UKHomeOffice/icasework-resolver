@@ -31,21 +31,58 @@ module.exports = class CaseworkModel extends Model {
     return crypto.createHash('md5').update(date + config.icasework.secret).digest('hex');
   }
 
+  // async save() {
+  //   try {
+  //     const data = await this.prepare();
+  //     const params = {
+  //       url: this.url(),
+  //       data,
+  //       timeout: config.icasework.timeout,
+  //       method: 'POST'
+  //     };
+  //     const response = await this._request(params);
+  //     console.log('******************* THIS IS THE RESPONSE: ', response);
+  //     return response;
+  //   } catch (error) {
+  //     console.error('Error saving data:', error);
+  //     throw error;
+  //   }
+  // }
+
+   // async save() {
+  //   try {
+  //     const data = await this.prepare();
+  //     const params = {
+  //       url: this.url(),
+  //       data,
+  //       timeout: config.icasework.timeout,
+  //       method: 'POST'
+  //     };
+  //     const response = await this._request(params);
+  //     return response;
+  //   } catch (error) {
+  //     console.error('Error saving data:', error);
+  //     throw error;
+  //   }
+  // }
+
   async save() {
     try {
-      const data = await this.prepare();
-      const params = {
-        url: this.url(),
-        data,
-        timeout: config.icasework.timeout,
-        method: 'POST'
-      };
-      const response = await this._request(params);
-      console.log('******************* THIS IS THE RESPONSE: ', response);
-      return response;
-    } catch (error) {
-      console.error('Error saving data:', error);
-      throw error;
+      return Promise.resolve(this.prepare()).then(async data => {
+        const params = {
+          url: this.url(),
+          data,
+          timeout: config.icasework.timeout,
+          method: 'POST'
+        };
+        const response = await this._request(params);
+        console.log('This is the response ', response);
+        console.log('This is the handled response ', this.handleResponse(response));
+        return response;
+      });
+    } catch (err) {
+      logger.error(`Error saving data: ${err.message}`);
+      throw new Error(`Failed to save data: ${err.message || 'Unknown error'}`);
     }
   }
 };

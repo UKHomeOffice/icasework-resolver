@@ -183,6 +183,7 @@ module.exports = class DocumentModel extends Model {
       };
       const response = await this._request(params);
       console.log('This is the response ', response);
+      console.log('This is the handled response ', this.handleResponse(response));
       return response;
       // return await this._request(params).then(response => {
       // return this.parse(response.data);
