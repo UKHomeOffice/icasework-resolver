@@ -3,6 +3,7 @@
 const { model: Model } = require('hof');
 const crypto = require('crypto');
 const config = require('../config');
+const logger = require('hof/lib/logger')({ env: config.env });
 
 module.exports = class CaseworkModel extends Model {
   // constructor(attributes, options) {
