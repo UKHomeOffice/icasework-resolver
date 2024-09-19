@@ -188,7 +188,7 @@ module.exports = class DocumentModel extends Model {
     };
     const params2 = {
       url: config.icasework.url,
-      method: 'GET',
+      method: 'GET'
     };
     const simpleGet = await this._request(params2);
     console.log('simple get ', simpleGet);
