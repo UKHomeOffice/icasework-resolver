@@ -68,7 +68,7 @@ module.exports = class CaseworkModel extends Model {
   // }
 
   async save() {
-    try {
+    // try {
       return Promise.resolve(this.prepare()).then(async data => {
         const params = {
           url: this.url(),
@@ -77,13 +77,13 @@ module.exports = class CaseworkModel extends Model {
           method: 'POST'
         };
         const response = await this._request(params);
-        console.log('This is the response ', response);
-        console.log('This is the handled response ', this.handleResponse(response));
+        console.log('*************** This is the icasework response ', response);
+        console.log('This is the handled icasework response ', this.handleResponse(response));
         return response;
       });
-    } catch (err) {
-      logger.error(`Error saving data: ${err.message}`);
-      throw new Error(`Failed to save data: ${err.message || 'Unknown error'}`);
-    }
+    // } catch (err) {
+    //   logger.error(`Error saving data: ${err.message}`);
+    //   throw new Error(`Failed to save data: ${err.message || 'Unknown error'}`);
+    // }
   }
 };

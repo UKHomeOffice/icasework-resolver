@@ -175,7 +175,7 @@ module.exports = class DocumentModel extends Model {
   }
 
   async fetch() {
-    try {
+    // try {
       const params = {
         url: this.url(),
         method: 'GET',
@@ -188,9 +188,9 @@ module.exports = class DocumentModel extends Model {
       // return await this._request(params).then(response => {
       // return this.parse(response.data);
       // })
-    } catch (err) {
-      logger.error(`Error fetching data from ${this.url()}: ${err.message}`);
-      throw new Error(`Failed to fetch data: ${err.message || 'Unknown error'}`);
-    }
+    // } catch (err) {
+    //   logger.error(`Error fetching data from ${this.url()}: ${err.message}`);
+    //   throw new Error(`Failed to fetch data: ${err.message || 'Unknown error'}`);
+    // }
   }
 };
