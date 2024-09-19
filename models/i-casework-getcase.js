@@ -127,7 +127,7 @@
 const Model = require('./i-casework');
 const crypto = require('crypto');
 const config = require('../config');
-const logger = require('hof/lib/logger')({ env: config.env });
+// const logger = require('hof/lib/logger')({ env: config.env });
 
 module.exports = class DocumentModel extends Model {
   url() {
@@ -176,18 +176,18 @@ module.exports = class DocumentModel extends Model {
 
   async fetch() {
     // try {
-      const params = {
-        url: this.url(),
-        method: 'GET',
-        params: this.prepare()
-      };
-      const response = await this._request(params);
-      console.log('This is the response ', response);
-      console.log('This is the handled response ', this.handleResponse(response));
-      return response;
-      // return await this._request(params).then(response => {
-      // return this.parse(response.data);
-      // })
+    const params = {
+      url: this.url(),
+      method: 'GET',
+      params: this.prepare()
+    };
+    const response = await this._request(params);
+    console.log('This is the response ', response);
+    console.log('This is the handled response ', this.handleResponse(response));
+    return response;
+    // return await this._request(params).then(response => {
+    // return this.parse(response.data);
+    // })
     // } catch (err) {
     //   logger.error(`Error fetching data from ${this.url()}: ${err.message}`);
     //   throw new Error(`Failed to fetch data: ${err.message || 'Unknown error'}`);

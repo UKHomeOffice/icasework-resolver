@@ -3,7 +3,7 @@
 const { model: Model } = require('hof');
 const crypto = require('crypto');
 const config = require('../config');
-const logger = require('hof/lib/logger')({ env: config.env });
+// const logger = require('hof/lib/logger')({ env: config.env });
 
 module.exports = class CaseworkModel extends Model {
   // constructor(attributes, options) {
@@ -69,18 +69,18 @@ module.exports = class CaseworkModel extends Model {
 
   async save() {
     // try {
-      return Promise.resolve(this.prepare()).then(async data => {
-        const params = {
-          url: this.url(),
-          data,
-          timeout: config.icasework.timeout,
-          method: 'POST'
-        };
-        const response = await this._request(params);
-        console.log('*************** This is the icasework response ', response);
-        console.log('This is the handled icasework response ', this.handleResponse(response));
-        return response;
-      });
+    return Promise.resolve(this.prepare()).then(async data => {
+      const params = {
+        url: this.url(),
+        data,
+        timeout: config.icasework.timeout,
+        method: 'POST'
+      };
+      const response = await this._request(params);
+      console.log('*************** This is the icasework response ', response);
+      console.log('This is the handled icasework response ', this.handleResponse(response));
+      return response;
+    });
     // } catch (err) {
     //   logger.error(`Error saving data: ${err.message}`);
     //   throw new Error(`Failed to save data: ${err.message || 'Unknown error'}`);
