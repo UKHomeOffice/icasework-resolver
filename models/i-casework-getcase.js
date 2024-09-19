@@ -130,6 +130,11 @@ const config = require('../config');
 // const logger = require('hof/lib/logger')({ env: config.env });
 
 module.exports = class DocumentModel extends Model {
+  constructor(attributes, options) {
+    super(attributes, options);
+    this.options.timeout = this.options.timeout || config.icasework.fetchTimeout;
+  }
+
   url() {
     return config.icasework.url + config.icasework.getcasepath;
   }
@@ -181,10 +186,18 @@ module.exports = class DocumentModel extends Model {
       method: 'GET',
       params: this.prepare()
     };
+    const params2 = {
+      url: config.icasework.url,
+      method: 'GET',
+    };
+    const simpleGet = await this._request(params2);
+    console.log('simple get ', simpleGet);
+    console.log('before response ');
     const response = await this._request(params);
+    console.log('after response ', response);
     console.log('This is the response ', response);
     console.log('This is the handled response ', this.handleResponse(response));
-    return response;
+    // return response;
     // return await this._request(params).then(response => {
     // return this.parse(response.data);
     // })
