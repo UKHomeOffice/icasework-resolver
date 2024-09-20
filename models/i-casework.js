@@ -37,7 +37,9 @@ module.exports = class CaseworkModel extends Model {
     const options = this.requestConfig({});
     options.data = this.prepare();
     options.method = 'POST';
-
+    console.log('****************** Saving function ');
+    console.log('****************** testing request ',this._request(options));
+    console.log('****************** testing other request ', this.request(options));
     return this.request(options);
   }
 };
