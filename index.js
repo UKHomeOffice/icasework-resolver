@@ -1,4 +1,4 @@
-/* eslint-disable consistent-return, no-console */
+/* eslint-disable consistent-return, no-console, no-shadow */
 'use strict';
 
 const { createLogger, format, transports } = require('winston');
@@ -13,7 +13,8 @@ const logger = createLogger({
     json()
   ),
   transports: [
-    new transports.Console({level: 'info',
+    new transports.Console({
+      level: 'info',
       handleExceptions: true
     })]
 });
@@ -72,16 +73,20 @@ const resolver = Consumer.create({
         requestType = 'GET';
         const getCaseResponse = await getCase.fetch();
         const isCaseFound = (getCaseResponse.exists ? 'found' : 'not found');
-        logger.info({ externalID, message: 'Casework GET request successful. externalId:' +
-          `${externalID} was ${isCaseFound}`});
+        logger.info({
+          message: `Casework GET request successful. External ID: ${externalID} was ${isCaseFound}`,
+          externalID: externalID,
+          status: isCaseFound
+        });
         caseID = getCaseResponse.caseId;
 
         if (!getCaseResponse.exists) {
           requestType = 'CREATECASE';
-          console.log('********************** About TO SAVE ***********************');
           const data = await submitCase.save();
-          console.log('********************** DATA', data, '***********************');
-          caseID = data.createcaseresponse.caseid;
+          const { caseid: caseID } = data?.createcaseresponse || {};
+          if (!caseID) {
+            logger.warn({ message: 'Failed to extract Case ID', data });
+          }
 
           logger.info({ caseID, externalID, message: 'Casework submission successful' });
 

@@ -21,7 +21,7 @@ The resolver will additionally connect to a postgres db and write audit data to 
 
 By default auditing is disabled but can be enabled by setting `AUDIT_DATA` to true.
 
-### Environment variables 
+### Environment variables
 
 You'll need to set the following env vars:
 
