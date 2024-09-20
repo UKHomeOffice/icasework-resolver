@@ -1,6 +1,6 @@
 'use strict';
 
-const Model = require('hof').model;
+const { model: Model } = require('hof');
 const crypto = require('crypto');
 
 const config = require('../config');
@@ -34,24 +34,24 @@ module.exports = class CaseworkModel extends Model {
   }
 
   save() {
-    const options = this.requestConfig({});
-    options.url = this.url();
-    options.data = this.prepare();
-    options.method = 'POST';
-    console.log('****************** Saving function ');
-    console.log('****************** testing request ', this._request(options), '*************************');
-    console.log('****************** testing other request ', this.request(options), '*************************');
-    return Promise.resolve(this.prepare()).then(data => {
-      const params = {
-        url: this.url(),
-        data,
-        timeout: config.icasework.timeout,
-        method: 'POST'
-      };
-      const response = this.request(params);
-      console.log('*************  response ', response);
-      return this.parse(response);
-    });
-    // return this.request(options);
+    // const options = this.requestConfig({});
+    // options.url = this.url();
+    // options.data = this.prepare();
+    // options.method = 'POST';
+    try {
+      return Promise.resolve(this.prepare()).then(data => {
+        const params = {
+          url: this.url(),
+          data,
+          timeout: config.icasework.timeout,
+          method: 'POST'
+        };
+        const response = this.request(params);
+        return this.parse(response);
+      });
+    } catch (err) {
+      logger.error(`Error saving data: ${err.message}`);
+      throw new Error(`Failed to save data: ${err.message || 'Unknown error'}`);
+    }
   }
 };
