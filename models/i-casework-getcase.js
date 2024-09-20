@@ -123,6 +123,7 @@
 
 
 'use strict';
+/* eslint-disable quote-props quotes */
 
 const Model = require('./i-casework');
 const crypto = require('crypto');
