@@ -78,7 +78,9 @@ const resolver = Consumer.create({
 
         if (!getCaseResponse.exists) {
           requestType = 'CREATECASE';
+          console.log('********************** About TO SAVE ***********************');
           const data = await submitCase.save();
+          console.log('********************** DATA', data, '***********************');
           caseID = data.createcaseresponse.caseid;
 
           logger.info({ caseID, externalID, message: 'Casework submission successful' });
