@@ -36,14 +36,10 @@ module.exports = class CaseworkModel extends Model {
   async save() {
     try {
       const data = await Promise.resolve(this.prepare());
-      const params = {
-        url: this.url(),
-        data,
-        timeout: config.icasework.timeout,
-        method: 'POST'
-      };
-      const response = await this._request(params);
-      return response;
+      const params = this.requestConfig({});
+      params.data = data;
+      params.method = 'POST';
+      return await this.request(params);
     } catch (err) {
       logger.error(`Error saving data: ${err.message}`);
       throw new Error(`Failed to save data: ${err.message || 'Unknown error'}`);

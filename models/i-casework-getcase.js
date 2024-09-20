@@ -13,7 +13,7 @@ module.exports = class DocumentModel extends Model {
 
   url() {
     // we are just building up the url with the path
-    return config.icasework.url + config.icasework.getcasepath;
+    return `${config.icasework.url}${config.icasework.getcasepath}`;
   }
 
   sign() {
@@ -52,7 +52,7 @@ module.exports = class DocumentModel extends Model {
     params.qs = this.prepare();
     params.method = 'GET';
     try {
-      return await this._request(params);
+      return await this.request(params);
     } catch (err) {
       logger.error(`Error fetching data from ${this.url()}: ${err.message}`);
       throw new Error(`Failed to fetch data: ${err.message || 'Unknown error'}`);
