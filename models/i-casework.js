@@ -35,11 +35,23 @@ module.exports = class CaseworkModel extends Model {
 
   save() {
     const options = this.requestConfig({});
+    options.url = this.url();
     options.data = this.prepare();
     options.method = 'POST';
     console.log('****************** Saving function ');
-    console.log('****************** testing request ',this._request(options));
-    console.log('****************** testing other request ', this.request(options));
-    return this.request(options);
+    console.log('****************** testing request ', this._request(options), '*************************');
+    console.log('****************** testing other request ', this.request(options), '*************************');
+    return Promise.resolve(this.prepare()).then(data => {
+      const params = {
+        url: this.url(),
+        data,
+        timeout: config.icasework.timeout,
+        method: 'POST'
+      };
+      const response = this.request(params);
+      console.log('*************  response ', response);
+      return this.parse(response);
+    });
+    // return this.request(options);
   }
 };
