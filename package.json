@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "engines": {
-    "node": "^14.15.0"
+    "node": ">=18.15.0 <21.0.0"
   },
   "scripts": {
     "start": "node index.js",
@@ -18,7 +18,7 @@
   "license": "MIT",
   "dependencies": {
     "aws-sdk": "^2.1354.0",
-    "hof": "~20.5.6",
+    "hof": "~21.1.0",
     "knex": "2.4.0",
     "pg": "^8.7.1",
     "sqs-consumer": "^5.4.0",
