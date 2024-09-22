@@ -13,7 +13,8 @@ const logger = createLogger({
     json()
   ),
   transports: [
-    new transports.Console({level: 'info',
+    new transports.Console({
+      level: 'info',
       handleExceptions: true
     })]
 });
@@ -62,28 +63,46 @@ const resolver = Consumer.create({
   queueUrl: config.aws.sqs,
   handleMessage: async message => {
     return new Promise(async (resolve, reject) => {
+      console.log('*************** Message Body', message.Body, '***************');
+      console.log('*************** Parsed Message Body', JSON.parse(message.Body), '***************');
       const getCase = new GetCase(JSON.parse(message.Body));
+      console.log('******************************  get case  ', getCase);
+      console.log('******************************  get case  ', getCase.url());
+      console.log('******************************  get case  ', getCase.prepare());
+      console.log('******************************  get case  ', getCase.sign());
       const submitCase = new SubmitCase(JSON.parse(message.Body));
       const externalID = submitCase.get('ExternalId');
       let caseID;
       let requestType = 'N/A';
 
+      console.log('*************** get case fetch ', await getCase.fetch(), '*************** end of get case fetch');
+
       try {
         requestType = 'GET';
         const getCaseResponse = await getCase.fetch();
+        console.log('*************** case response ', getCaseResponse, '*************** end of case response ');
         const isCaseFound = (getCaseResponse.exists ? 'found' : 'not found');
-        logger.info({ externalID, message: 'Casework GET request successful. externalId:' +
-          `${externalID} was ${isCaseFound}`});
+        logger.info({
+          message: `Casework GET request successful. External ID: ${externalID} was ${isCaseFound}`
+          // externalID: externalID,
+          // status: isCaseFound
+        });
         caseID = getCaseResponse.caseId;
 
         if (!getCaseResponse.exists) {
           requestType = 'CREATECASE';
           const data = await submitCase.save();
-          caseID = data.createcaseresponse.caseid;
+          console.log('**************** create case data ', data, '**************** end of create case data');
+          // const { caseid: caseId } = data?.data?.createcaseresponse || {};
+          const caseId = data.data.createcaseresponse.caseid;
 
-          logger.info({ caseID, externalID, message: 'Casework submission successful' });
+          if (!caseId) {
+            logger.warn({ message: 'Failed to extract Case ID', data });
+          }
 
-          await submitAudit('resolver', { success: true, caseID, externalID });
+          logger.info({ caseId, externalID, message: 'Casework submission successful' });
+
+          await submitAudit('resolver', { success: true, caseId, externalID });
           return resolve();
         }
 
@@ -93,7 +112,7 @@ const resolver = Consumer.create({
         await submitAudit('resolver', { success: true, caseID, externalID });
         return resolve();
       } catch (e) {
-        return handleError(caseID, externalID, requestType, reject, e);
+        return handleError(caseID, externalID, requestType, reject, e.message);
       }
     });
   }
