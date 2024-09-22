@@ -13,7 +13,8 @@ const logger = createLogger({
     json()
   ),
   transports: [
-    new transports.Console({level: 'info',
+    new transports.Console({
+      level: 'info',
       handleExceptions: true
     })]
 });
@@ -60,7 +61,7 @@ const handleError = async (caseID, externalID, requestType, reject, err) => {
 
 const resolver = Consumer.create({
   queueUrl: config.aws.sqs,
-  handleMessage: async message => {
+  handleMessage: async (message, err) => {
     return new Promise(async (resolve, reject) => {
       const getCase = new GetCase(JSON.parse(message.Body));
       const submitCase = new SubmitCase(JSON.parse(message.Body));
@@ -68,36 +69,73 @@ const resolver = Consumer.create({
       let caseID;
       let requestType = 'N/A';
 
-      try {
-        requestType = 'GET';
-        const getCaseResponse = await getCase.fetch();
-        const isCaseFound = (getCaseResponse.exists ? 'found' : 'not found');
-        logger.info({ externalID, message: 'Casework GET request successful. externalId:' +
-          `${externalID} was ${isCaseFound}`});
-        caseID = getCaseResponse.caseId;
+      // try {
+      requestType = 'GET';
+      const getCaseResponse = await getCase.fetch();
+      const isCaseFound = (getCaseResponse.exists ? 'found' : 'not found');
+      logger.info({
+        message: `Casework GET request successful. External ID: ${externalID} was ${isCaseFound}`,
+        externalID: externalID,
+        status: isCaseFound
+      });
+      caseID = getCaseResponse.caseId;
 
-        if (!getCaseResponse.exists) {
-          requestType = 'CREATECASE';
-          const data = await submitCase.save();
-          caseID = data.createcaseresponse.caseid;
+      if (!getCaseResponse.exists) {
+        requestType = 'CREATECASE';
+        const data = await submitCase.save();
+        caseID = data.createcaseresponse.caseid;
 
-          logger.info({ caseID, externalID, message: 'Casework submission successful' });
+        logger.info({ caseID, externalID, message: 'Casework submission successful' });
 
-          await submitAudit('resolver', { success: true, caseID, externalID });
-          return resolve();
-        }
-
-        logger.info({ externalID, message: `Case already submitted with iCasework Case ID ${caseID}` });
-
-        await submitAudit('duplicates', { caseID, externalID });
         await submitAudit('resolver', { success: true, caseID, externalID });
         return resolve();
-      } catch (e) {
-        return handleError(caseID, externalID, requestType, reject, e);
       }
+
+      logger.info({ externalID, message: `Case already submitted with iCasework Case ID ${caseID}` });
+
+      await submitAudit('duplicates', { caseID, externalID });
+      await submitAudit('resolver', { success: true, caseID, externalID });
+      if (err) {
+        return handleError(caseID, externalID, requestType, reject, err);
+      }
+      return resolve();
+      // }
     });
   }
 });
+
+// try {
+//   requestType = 'GET';
+//   const getCaseResponse = await getCase.fetch();
+//   const isCaseFound = (getCaseResponse.exists ? 'found' : 'not found');
+//   logger.info({
+//     message: `Casework GET request successful. External ID: ${externalID} was ${isCaseFound}`,
+//     externalID: externalID,
+//     status: isCaseFound
+//   });
+//   caseID = getCaseResponse.caseId;
+
+//   if (!getCaseResponse.exists) {
+//     requestType = 'CREATECASE';
+//     const data = await submitCase.save();
+//     const { caseid: caseId } = data?.data?.createcaseresponse || {};
+
+//     if (!caseId) {
+//       logger.warn({ message: 'Failed to extract Case ID', data });
+//     }
+
+//     logger.info({ caseId, externalID, message: 'Casework submission successful' });
+
+//     await submitAudit('resolver', { success: true, caseId, externalID });
+//     return resolve();
+//   }
+
+//   logger.info({ externalID, message: `Case already submitted with iCasework Case ID ${caseID}` });
+
+//   await submitAudit('duplicates', { caseID, externalID });
+//   await submitAudit('resolver', { success: true, caseID, externalID });
+//   return resolve();
+// }
 
 resolver.on('error', err => {
   console.error(err.message);

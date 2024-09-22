@@ -3,6 +3,7 @@
 const Model = require('hof').model;
 const crypto = require('crypto');
 const config = require('../config');
+const axios = require('axios');
 
 module.exports = class DocumentModel extends Model {
   constructor(attributes, options) {
@@ -46,10 +47,43 @@ module.exports = class DocumentModel extends Model {
     }
   }
 
-  fetch() {
+  // FIREARMS code
+  // fetch() {
+  //   const params = {
+  //     url: this.url(),
+  //     method: 'GET',
+  //     params: this.prepare()
+  //   };
+  //   return axios(params).then(response => {
+  //     console.log(response);
+  //     return this.parse(response.data);
+  //   })
+  //     .catch(err => {
+  //       console.error(`Error fetching data from ${params.url}: ${err.message}`);
+  //       throw new Error(`Failed to fetch data: ${err.message || 'Unknown error'}`);
+  //     });
+  // }
+
+  async fetch() {
     const options = this.requestConfig({});
     options.qs = this.prepare();
     options.method = 'GET';
+    console.log('Options ', options);
+    const response = await this.request(options);
+    console.log('******************* THIS IS AFTER THE CONTROL FETCH RESPONSE: ', response);
+
+    // axios code
+    const params = {
+      url: this.url(),
+      method: 'GET',
+      params: this.prepare()
+    };
+    console.log('HELLLLLLLOOOOOOOOOO');
+    console.log('************PREPARING ', this.prepare());
+    console.log('************************Fetching with axios 2 ', await axios(params));
+    const fetchResponse = await axios.get(this.url(), this.prepare());
+    console.log('************************Fetching with axios ', fetchResponse);
+    // end of axios code
 
     return this.request(options);
   }
