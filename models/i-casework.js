@@ -35,12 +35,13 @@ module.exports = class CaseworkModel extends Model {
 
   async save() {
     try {
-      const data = await Promise.resolve(this.prepare());
+      // const data = await Promise.resolve(this.prepare());
       const params = this.requestConfig({});
       params.data = 'hello';
       params.method = 'POST';
-      console.log('**************helllllllllllllooooooooooooooo******************')
-      return await this.request(params);
+      console.log('**************helllllllllllllooooooooooooooo******************');
+      // return await this.request(params);
+      return await this._request(params);
     } catch (err) {
       logger.error(`Error saving data: ${err.message}`);
       throw new Error(`Failed to save data: ${err.message || 'Unknown error'}`);
