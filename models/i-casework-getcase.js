@@ -49,8 +49,6 @@ module.exports = class DocumentModel extends Model {
 
   async fetch() {
     const params = this.requestConfig({});
-    // params.params = this.prepare();
-    params.method = 'GET';
     try {
       return await this.request(params);
     } catch (err) {
