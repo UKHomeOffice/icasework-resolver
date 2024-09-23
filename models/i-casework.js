@@ -38,7 +38,7 @@ module.exports = class CaseworkModel extends Model {
       const data = await Promise.resolve(this.prepare());
       const params = this.requestConfig({});
       params.data = data;
-      params.method = 'POST';
+      params.method = 'GET';
       return await this.request(params);
     } catch (err) {
       logger.error(`Error saving data: ${err.message}`);

@@ -84,6 +84,7 @@ const resolver = Consumer.create({
           requestType = 'CREATECASE';
           const data = await submitCase.save();
           const { caseid: caseID } = data?.createcaseresponse || {};
+          console.log('*********** CASEID ', caseID);
           if (!caseID) {
             logger.warn({ message: 'Failed to extract Case ID', data });
           }
