@@ -21,7 +21,7 @@ module.exports = class CaseworkModel extends Model {
       Signature: this.sign(),
       Type: config.icasework.type,
       Format: 'json',
-      db: 'db',
+      db: config.icasework.db,
       RequestMethod: 'Online form'
     };
 
@@ -37,8 +37,9 @@ module.exports = class CaseworkModel extends Model {
     try {
       const data = await Promise.resolve(this.prepare());
       const params = this.requestConfig({});
-      params.data = data;
+      params.data = 'hello';
       params.method = 'POST';
+      console.log('**************helllllllllllllooooooooooooooo******************')
       return await this.request(params);
     } catch (err) {
       logger.error(`Error saving data: ${err.message}`);
