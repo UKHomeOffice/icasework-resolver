@@ -1,8 +1,9 @@
 'use strict';
 
-const Model = require('hof').model;
+const { model: Model } = require('hof');
 const crypto = require('crypto');
 const config = require('../config');
+const logger = require('hof/lib/logger')({ env: config.env });
 
 module.exports = class DocumentModel extends Model {
   constructor(attributes, options) {
@@ -12,7 +13,7 @@ module.exports = class DocumentModel extends Model {
 
   url() {
     // we are just building up the url with the path
-    return config.icasework.url + config.icasework.getcasepath;
+    return `${config.icasework.url}${config.icasework.getcasepath}`;
   }
 
   sign() {
@@ -46,11 +47,13 @@ module.exports = class DocumentModel extends Model {
     }
   }
 
-  fetch() {
-    const options = this.requestConfig({});
-    options.qs = this.prepare();
-    options.method = 'GET';
-
-    return this.request(options);
+  async fetch() {
+    const params = this.requestConfig({});
+    try {
+      return await this.request(params);
+    } catch (err) {
+      logger.error(`Error fetching data from ${this.url()}: ${err.message}`);
+      throw new Error(`Failed to fetch data: ${err.message || 'Unknown error'}`);
+    }
   }
 };
