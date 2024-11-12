@@ -1,9 +1,9 @@
 'use strict';
 
-const Model = require('hof').model;
+const { model: Model } = require('hof');
 const crypto = require('crypto');
-
 const config = require('../config');
+const logger = require('hof/lib/logger')({ env: config.env });
 
 module.exports = class CaseworkModel extends Model {
   constructor(attributes, options) {
@@ -12,7 +12,7 @@ module.exports = class CaseworkModel extends Model {
   }
 
   url() {
-    return config.icasework.url + config.icasework.createpath;
+    return `${config.icasework.url}${config.icasework.createpath}?db=${encodeURIComponent(config.icasework.db)}`;
   }
 
   prepare() {
@@ -33,11 +33,16 @@ module.exports = class CaseworkModel extends Model {
     return crypto.createHash('md5').update(date + config.icasework.secret).digest('hex');
   }
 
-  save() {
-    const options = this.requestConfig({});
-    options.form = this.prepare();
-    options.method = 'POST';
-
-    return this.request(options);
+  async save() {
+    try {
+      const data = await Promise.resolve(this.prepare());
+      const options = this.requestConfig({});
+      options.data = data;
+      options.method = 'POST';
+      return await this.request(options);
+    } catch (err) {
+      logger.error(`Error saving data: ${err.message}`);
+      throw new Error(`Failed to save data: ${err.message || 'Unknown error'}`);
+    }
   }
 };

@@ -2,18 +2,6 @@
 version: v1.19.0
 # ignores vulnerabilities until expiry date; change duration by modifying expiry date
 ignore:
-  SNYK-JS-JSONSCHEMA-1920922:
-    - hof > request > http-signature > jsprim > json-schema:
-        reason: Need to replace request module in hof
-        expires: '2024-10-18T14:49:41.738Z'
-  SNYK-JS-REQUEST-3361831:
-    - '*':
-        reason: Need to replace request module in hof
-        expires: '2024-10-18T14:49:41.738Z'
-  SNYK-JS-TOUGHCOOKIE-5672873:
-    - '*':
-        reason: Need to replace request module in hof
-        expires: '2024-10-18T14:49:41.738Z'
   SNYK-JS-AXIOS-6032459:
       - '*':
         reason: Need to update notifications-node-client module in hof
