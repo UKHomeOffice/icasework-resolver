@@ -68,6 +68,7 @@ const resolver = Consumer.create({
       const externalID = submitCase.get('ExternalId');
       let caseID;
       let requestType = 'N/A';
+      logger.info('Payload being received from SQS:', message.Body);
 
       try {
         requestType = 'GET';

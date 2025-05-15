@@ -5,21 +5,45 @@ ignore:
   SNYK-JS-AXIOS-6032459:
       - '*':
         reason: Need to update notifications-node-client module in hof
-        expires: '2024-10-18T14:49:41.738Z'
+        expires: '2025-10-18T14:49:41.738Z'
   SNYK-JS-AXIOS-6124857:
       - '*':
         reason: Need to update notifications-node-client module in hof
-        expires: '2024-10-18T14:49:41.738Z'
+        expires: '2025-10-18T14:49:41.738Z'
+  SNYK-JS-AXIOS-9292519:
+      - '*':
+        reason: Need to update notifications-node-client module in hof
+        expires: '2025-10-18T14:49:41.738Z'
+  SNYK-JS-AXIOS-9403194:
+      - '*':
+        reason: Need to update notifications-node-client module in hof
+        expires: '2025-10-18T14:49:41.738Z'
+  SNYK-JS-COOKIE-8163060:
+      - '*':
+        reason: Need to update notifications-node-client module in hof
+        expires: '2025-10-18T14:49:41.738Z'
+  SNYK-JS-ELLIPTIC-8187303:
+      - '*':
+        reason: Need to update notifications-node-client module in hof
+        expires: '2025-10-18T14:49:41.738Z'
+  SNYK-JS-PATHTOREGEXP-8482416:
+      - '*':
+        reason: Need to update notifications-node-client module in hof
+        expires: '2025-10-18T14:49:41.738Z'
+  SNYK-JS-ELLIPTIC-8720086:
+      - '*':
+        reason: Need to update notifications-node-client module in hof
+        expires: '2025-10-18T14:49:41.738Z'
   SNYK-JS-MARKDOWNIT-6483324:
       - '*':
         reason: Need to update markdownit module in hof
-        expires: '2024-10-18T14:49:41.738Z'
+        expires: '2025-10-18T14:49:41.738Z'
   SNYK-JS-ASYNC-7414156:
       - '*':
         reason: No upgrade or patch available
-        expires: '2024-10-18T14:49:41.738Z'
+        expires: '2025-10-18T14:49:41.738Z'
   SNYK-JS-INFLIGHT-6095116:
       - '*':
         reason: No upgrade or patch available
-        expires: '2024-10-18T14:49:41.738Z'
+        expires: '2025-10-18T14:49:41.738Z'
 patch: {}

@@ -36,6 +36,7 @@ module.exports = class CaseworkModel extends Model {
   async save() {
     try {
       const data = await Promise.resolve(this.prepare());
+      logger.info('Payload being sent to Icasework:', data);
       const options = this.requestConfig({});
       options.data = data;
       options.method = 'POST';
