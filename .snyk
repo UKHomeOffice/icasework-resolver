@@ -2,24 +2,36 @@
 version: v1.19.0
 # ignores vulnerabilities until expiry date; change duration by modifying expiry date
 ignore:
-  SNYK-JS-AXIOS-6032459:
+  SNYK-JS-ELLIPTIC-14908844:
       - '*':
-        reason: Need to update notifications-node-client module in hof
-        expires: '2024-10-18T14:49:41.738Z'
-  SNYK-JS-AXIOS-6124857:
+        reason: Need to update elliptic module in hof
+        expires: '2026-10-18T14:49:41.738Z'
+  SNYK-JS-NODEMAILER-13378253:
       - '*':
-        reason: Need to update notifications-node-client module in hof
-        expires: '2024-10-18T14:49:41.738Z'
-  SNYK-JS-MARKDOWNIT-6483324:
+        reason: Need to update nodemailer module in hof
+        expires: '2026-10-18T14:49:41.738Z'
+  SNYK-JS-NODEMAILER-14157156:
       - '*':
-        reason: Need to update markdownit module in hof
-        expires: '2024-10-18T14:49:41.738Z'
-  SNYK-JS-ASYNC-7414156:
+        reason: Need to update nodemailer module in hof
+        expires: '2026-10-18T14:49:41.738Z'
+  SNYK-JS-NODEMAILER-15790064:
       - '*':
-        reason: No upgrade or patch available
-        expires: '2024-10-18T14:49:41.738Z'
+        reason: Need to update nodemailer module in hof
+        expires: '2026-10-18T14:49:41.738Z'
+  SNYK-JS-NODEMAILER-15930946:
+      - '*':
+        reason: Need to update nodemailer module in hof
+        expires: '2026-10-18T14:49:41.738Z'
   SNYK-JS-INFLIGHT-6095116:
       - '*':
-        reason: No upgrade or patch available
-        expires: '2024-10-18T14:49:41.738Z'
+        reason: Need to update inflight module in hof
+        expires: '2026-10-18T14:49:41.738Z'
+  SNYK-JS-MARKDOWNIT-64833246:
+      - '*':
+        reason: Need to update markdown-it module in hof
+        expires: '2026-10-18T14:49:41.738Z'
+  SNYK-JS-MARKDOWNIT-6483324:
+      - '*':
+        reason: Need to update markdown-it module in hof
+        expires: '2026-10-18T14:49:41.738Z'
 patch: {}
