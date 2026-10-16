@@ -3,3 +3,8 @@ public
 LICENSE.md
 README.md
 CONTRIBUTING.md
+.github
+.drone.yml
+.gitignore
+pull-request-template.md
+hof-services-config
