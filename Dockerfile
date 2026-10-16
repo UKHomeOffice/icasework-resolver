@@ -1,4 +1,13 @@
 # Node version 20
+FROM node:20.17.0-alpine3.20@sha256:2cc3d19887bfea8bf52574716d5f16d4668e35158de866099711ddfb2b16b6e0 AS builder
+
+USER root
+WORKDIR /app
+
+COPY . /app
+
+RUN yarn install --frozen-lockfile --production --ignore-optional --ignore-scripts
+
 FROM node:20.17.0-alpine3.20@sha256:2cc3d19887bfea8bf52574716d5f16d4668e35158de866099711ddfb2b16b6e0
 
 USER root
@@ -16,8 +25,7 @@ USER 999
 
 WORKDIR /app
 
-COPY --chown=999:998 . /app
-
-RUN yarn install --frozen-lockfile --production --ignore-optional --ignore-scripts
+COPY --from=builder --chown=999:998 /app/node_modules /app/node_modules
+COPY --from=builder --chown=999:998 /app/. /app
 
 CMD node index.js

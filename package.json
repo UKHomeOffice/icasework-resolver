@@ -31,6 +31,7 @@
     "snyk": "^1.722.0"
   },
   "resolutions": {
+    "source-map-js": "^1.2.2",
     "underscore": "^1.12.1"
   }
 }
